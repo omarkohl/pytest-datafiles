@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning`_. The change log is
 formatted as suggested by `Keep a CHANGELOG`_.
 
+`Unreleased`_
+~~~~~~~~~~~~~
+
+Added
+Changed
+Deprecated
+Removed
+Fixed
+Security
+
 `0.1`_
 ~~~~~~~
 
@@ -16,6 +26,7 @@ Added
   function
 
 
+.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/0.1...master
 .. _`0.1`: https://github.com/omarkohl/pytest-datafiles/compare/3c31b2c...0.1
 
 
