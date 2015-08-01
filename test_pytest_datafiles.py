@@ -23,6 +23,7 @@ def test_copy_hosts(testdir):
         "*1 passed*"
         ])
 
+
 def test_multiple_files(testdir):
     """
     Create a test that relies on several files being present.
@@ -44,6 +45,7 @@ def test_multiple_files(testdir):
     result.stdout.fnmatch_lines([
         "*1 passed*"
         ])
+
 
 def test_no_files(testdir):
     """

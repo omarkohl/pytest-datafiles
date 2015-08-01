@@ -1,6 +1,7 @@
 import py
 import pytest
 
+
 def _is_str(s):
     """
     Check if 's' is a string (both Python 2 and 3)
@@ -9,6 +10,7 @@ def _is_str(s):
         return isinstance(s, basestring)
     except NameError:
         return isinstance(s, str)
+
 
 @pytest.fixture
 def datafiles(request, tmpdir):
