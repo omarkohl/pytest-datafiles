@@ -3,4 +3,5 @@
 __pycache__/
 build/
 dist/
+htmlcov/
 pytest_datafiles.egg-info/
