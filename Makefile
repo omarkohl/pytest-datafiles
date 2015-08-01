@@ -42,7 +42,7 @@ test-all:
 
 coverage:
 	tox -e coverage
-	open htmlcov/index.html
+	xdg-open htmlcov/index.html
 
 dist: clean
 	python setup.py sdist
