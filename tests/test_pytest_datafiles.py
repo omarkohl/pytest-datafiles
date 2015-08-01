@@ -1,23 +1,64 @@
+import os
+import py
 import pytest
 
 
-@pytest.mark.datafiles("/etc/hosts")
-def test_copy_hosts(datafiles):
-    """
-    Verify that a 'hosts' file containing an entry 'localhost' has been copied
-    """
-    assert (datafiles / 'hosts').check(file=1)
-    assert 'localhost' in (datafiles / 'hosts').read_text('utf-8')
+TEST_DIR = os.path.dirname(os.path.realpath(__file__))
+FIXTURE_DIR = os.path.join(TEST_DIR, '_fixture_files')
+FIXTURE_FILES = [
+    os.path.join(FIXTURE_DIR, name)
+    for name in [
+        'huckleberry.txt',
+        'random.bin',
+        'sparrow.jpg',
+        ]
+    ]
 
 
-@pytest.mark.datafiles("/etc/hosts", "/etc/hostname")
-def test_multiple_files(datafiles):
+@pytest.mark.datafiles(
+    py.path.local(
+        FIXTURE_FILES[0],  # huckleberry.txt
+	)
+    )
+def test_single_file_pypath(datafiles):
     """
-    Verify multiple files are found
+    Verify that a single file (py.path.local) is copied correctly
     """
-    assert (datafiles / 'hosts').check(file=1)
-    assert (datafiles / 'hostname').check(file=1)
-    assert len((datafiles).listdir()) == 2
+    assert (datafiles / 'huckleberry.txt').check(file=1)
+    assert 'Mark Twain' in (datafiles / 'huckleberry.txt').read_text('utf-8')
+
+
+@pytest.mark.datafiles(FIXTURE_FILES[0])  # huckleberry.txt
+def test_single_file_str(datafiles):
+    """
+    Verify that a single file (str) is copied correctly
+    """
+    assert (datafiles / 'huckleberry.txt').check(file=1)
+    assert 'Mark Twain' in (datafiles / 'huckleberry.txt').read_text('utf-8')
+
+
+@pytest.mark.datafiles(
+    *[py.path.local(p) for p in FIXTURE_FILES]
+    )
+def test_multiple_files_pypath(datafiles):
+    """
+    Verify multiple files (py.path.local) are copied correctly
+    """
+    assert (datafiles / 'huckleberry.txt').check(file=1)
+    assert (datafiles / 'random.bin').check(file=1)
+    assert (datafiles / 'sparrow.jpg').check(file=1)
+    assert len((datafiles).listdir()) == 3
+
+
+@pytest.mark.datafiles(*FIXTURE_FILES)
+def test_multiple_files_str(datafiles):
+    """
+    Verify multiple files (str) are copied correctly
+    """
+    assert (datafiles / 'huckleberry.txt').check(file=1)
+    assert (datafiles / 'random.bin').check(file=1)
+    assert (datafiles / 'sparrow.jpg').check(file=1)
+    assert len((datafiles).listdir()) == 3
 
 
 @pytest.mark.datafiles
