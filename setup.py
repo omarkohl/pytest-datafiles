@@ -1,4 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import os
+import codecs
 from setuptools import setup
+
+
+def _read(fname):
+    file_path = os.path.join(os.path.dirname(__file__), fname)
+    return codecs.open(file_path, encoding='utf-8').read()
 
 
 DEPENDENCIES = [
@@ -8,8 +18,7 @@ DEPENDENCIES = [
 
 DESCRIPTION = ("py.test plugin to create a 'tmpdir' containing predefined "
 	       "files/directories.")
-with open('README.rst') as f:
-    LONG_DESCRIPTION = f.read()
+LONG_DESCRIPTION = _read('README.rst') + '\n\n' + _read('CHANGELOG.rst')
 
 setup(
     name='pytest-datafiles',
@@ -20,6 +29,8 @@ setup(
     install_requires=DEPENDENCIES,
     author='Omar Kohl',
     author_email='omarkohl@gmail.com',
+    maintainer='Omar Kohl',
+    maintainer_email='omarkohl@gmail.com',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     entry_points={
