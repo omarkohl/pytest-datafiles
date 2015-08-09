@@ -6,7 +6,7 @@ help:
 	@echo "clean-pyc - remove Python file artifacts"
 	@echo "clean-test - remove test and coverage artifacts"
 	@echo "lint - check style with Flake8 and Pylint"
-	@echo "test - run tests quickly with the Python 3.4"
+	@echo "test - run tests quickly with Python 3.4"
 	@echo "test-all - run tests on every Python version with tox"
 	@echo "coverage - check code coverage quickly with Python 3.4"
 	@echo "dist - package"
