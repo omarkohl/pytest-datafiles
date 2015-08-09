@@ -1,5 +1,9 @@
+"""
+Tests for the pytest-datafiles pytest plugin
+"""
+
 import os
-import py
+from py import path  # pylint: disable=E0611
 import pytest
 
 
@@ -16,9 +20,9 @@ FIXTURE_FILES = [
 
 
 @pytest.mark.datafiles(
-    py.path.local(
+    path.local(
         FIXTURE_FILES[0],  # huckleberry.txt
-	)
+        )
     )
 def test_single_file_pypath(datafiles):
     """
@@ -38,7 +42,7 @@ def test_single_file_str(datafiles):
 
 
 @pytest.mark.datafiles(
-    *[py.path.local(p) for p in FIXTURE_FILES]
+    *[path.local(p) for p in FIXTURE_FILES]
     )
 def test_multiple_files_pypath(datafiles):
     """
