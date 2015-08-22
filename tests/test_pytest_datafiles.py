@@ -7,6 +7,9 @@ from py import path  # pylint: disable=E0611
 import pytest
 
 
+pytest_plugins = 'pytester'
+
+
 TEST_DIR = os.path.dirname(os.path.realpath(__file__))
 FIXTURE_DIR = os.path.join(TEST_DIR, '_fixture_files')
 FIXTURE_FILES = [
@@ -116,28 +119,6 @@ def test_multi_dir_str(datafiles):
 
 @pytest.mark.datafiles(
     path.local(FIXTURE_DIR) / 'dir1',
-    path.local(FIXTURE_DIR) / 'dir2',
-    path.local(FIXTURE_DIR) / 'dir3',
-    )
-def test_multi_dir_overwrite(datafiles):
-    """
-    Verify files with the same name are overwritten
-
-    When copying from multiple directories if files have the same name they are
-    overwritten by the last occurence.
-    """
-    assert len(datafiles.listdir()) == 6
-    # file1 and file4 appear twice and are overwritten by the one in dir3
-    assert (datafiles / 'file1').read() == "dir3\n123\n"
-    assert (datafiles / 'file2').read() == "dir1\n456\n"
-    assert (datafiles / 'file3').read() == "dir1\n789\n"
-    assert (datafiles / 'file4').read() == "dir3\n101112\n"
-    assert (datafiles / 'file5').read() == "dir2\n131415\n"
-    assert (datafiles / 'file6').read() == "dir2\n161718\n"
-
-
-@pytest.mark.datafiles(
-    path.local(FIXTURE_DIR) / 'dir1',
     path.local(FIXTURE_FILES[0]),  # huckleberry.txt
     path.local(FIXTURE_DIR) / 'dir4',
     path.local(FIXTURE_FILES[1]),  # random.bin
@@ -158,3 +139,82 @@ def test_multiple(datafiles):
     assert (datafiles / 'subdir1' / 'file1').check(file=1)
     assert (datafiles / 'subdir2' / 'file2').check(file=1)
     assert (datafiles / 'subdir2' / 'file2').check(file=1)
+
+
+@pytest.mark.datafiles(
+    path.local(FIXTURE_DIR) / 'dir1',
+    path.local(FIXTURE_DIR) / 'dir2',
+    keep_top_dir=True,
+    )
+def test_keep_top_dir(datafiles):
+    """
+    Verify top level directory is kept (instead of only copying the content)
+    """
+    assert len(datafiles.listdir()) == 2
+    assert (datafiles / 'dir1').check(dir=1)
+
+
+@pytest.mark.datafiles(
+    path.local(FIXTURE_DIR) / 'dir1',
+    path.local(FIXTURE_DIR) / 'dir2',
+    path.local(FIXTURE_DIR) / 'dir3',
+    on_duplicate='ignore',
+    )
+def test_on_duplicate_ignore(datafiles):
+    """
+    Verify duplicate files are ignored (i.e. the first one is kept)
+
+    If duplicate files appear (to be copied) then the duplicates are ignored
+    and the first occurence is kept. In this example the file 'file1' appears
+    both in dir1 and dir3 and 'file4' appears both in dir2 and dir3.
+    """
+    assert len(datafiles.listdir()) == 6
+    assert (datafiles / 'file1').read() == "dir1\n123\n"
+    assert (datafiles / 'file4').read() == "dir2\n101112\n"
+
+
+@pytest.mark.datafiles(
+    path.local(FIXTURE_DIR) / 'dir1',
+    path.local(FIXTURE_DIR) / 'dir2',
+    path.local(FIXTURE_DIR) / 'dir3',
+    on_duplicate='overwrite',
+    )
+def test_on_duplicate_overwrite(datafiles):
+    """
+    Verify duplicate files are overwritten (i.e. the last one is kept)
+
+    If duplicate files appear (to be copied) then the duplicates are
+    overwritten and the first last is kept. In this example the file 'file1'
+    appears both in dir1 and dir3 and 'file4' appears both in dir2 and dir3.
+    """
+    assert len(datafiles.listdir()) == 6
+    assert (datafiles / 'file1').read() == "dir3\n123\n"
+    assert (datafiles / 'file4').read() == "dir3\n101112\n"
+
+
+def test_on_duplicate_exception(testdir):
+    """
+    Verify that a ValueError is raised when duplicate files appear
+
+    This is the default behaviour.
+
+    If duplicate files appear (to be copied) then a ValueError is raised. In
+    this example the file 'file1' appears both in dir1 and dir3 and 'file4'
+    appears both in dir2 and dir3.
+    """
+    testdir.makepyfile('''
+        import pytest
+        from py import path
+
+        FIXTURE_DIR = '{0}'
+
+        @pytest.mark.datafiles(
+            path.local(FIXTURE_DIR) / 'dir1',
+            path.local(FIXTURE_DIR) / 'dir2',
+            path.local(FIXTURE_DIR) / 'dir3',
+            )
+        def test_ode(datafiles):
+            assert len(datafiles.listdir()) == 6
+    '''.format(FIXTURE_DIR))
+    result = testdir.runpytest('-s')
+    result.stdout.fnmatch_lines(["E*ValueError:*file1'*already exists*"])
