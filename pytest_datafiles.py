@@ -49,8 +49,7 @@ def datafiles(request, tmpdir):
                 raise ValueError(
                     "'%s' already exists (entry %s)" % (basename, entry)
                     )
-            else: # on_duplicate == 'ignore'
-                continue
+            # on_duplicate == 'ignore': do nothing with entry
         elif entry.isdir():
             # Regular directory (no keep_top_dir). Need to check every file for duplicates
             if on_duplicate == 'overwrite':
@@ -64,10 +63,10 @@ def datafiles(request, tmpdir):
                     raise ValueError(
                         "'%s' already exists (entry %s)" % ((tmpdir / e2.basename), e2)
                         )
-                else: # on_duplicate == 'ignore'
-                    continue
+                # on_duplicate == 'ignore': do nothing with e2
         else:
             raise ValueError(
-                "entry %s is neither file nor dir. Not supported." % entry
+                "entry '%s' is neither file nor dir. Possibly it doesn't " \
+                "exist." % entry
                 )
     return tmpdir

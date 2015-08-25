@@ -160,7 +160,7 @@ def test_keep_top_dir(datafiles):
     path.local(FIXTURE_DIR) / 'dir3',
     on_duplicate='ignore',
     )
-def test_on_duplicate_ignore(datafiles):
+def test_on_duplicate_ignore_dir(datafiles):
     """
     Verify duplicate files are ignored (i.e. the first one is kept)
 
@@ -218,3 +218,57 @@ def test_on_duplicate_exception(testdir):
     '''.format(FIXTURE_DIR))
     result = testdir.runpytest('-s')
     result.stdout.fnmatch_lines(["E*ValueError:*file1'*already exists*"])
+
+
+def test_on_duplicate_exception2(testdir):
+    """
+    Verify that a ValueError is raised when duplicate files appear
+    """
+    testdir.makepyfile('''
+        import pytest
+        from py import path
+
+        FIXTURE_DIR = '{0}'
+
+        @pytest.mark.datafiles(
+            path.local(FIXTURE_DIR) / 'dir1' / 'file1',
+            path.local(FIXTURE_DIR) / 'dir3' / 'file1',
+            )
+        def test_ode(datafiles):
+            assert len(datafiles.listdir()) == 2
+    '''.format(FIXTURE_DIR))
+    result = testdir.runpytest('-s')
+    result.stdout.fnmatch_lines(["E*ValueError:*file1'*already exists*"])
+
+
+@pytest.mark.datafiles(
+    path.local(FIXTURE_DIR) / 'dir1' / 'file1',
+    path.local(FIXTURE_DIR) / 'dir3' / 'file1',
+    on_duplicate='ignore',
+    )
+def test_on_duplicate_ignore_file(datafiles):
+    """
+    Verify on_duplicate=ignore causes the first file to be used
+    """
+    assert (datafiles / 'file1').check(file=1)
+    assert (datafiles / 'file1').read() == "dir1\n123\n"
+
+
+def test_non_existing_file(testdir):
+    """
+    Verify exception is raised if file doesn't exist.
+    """
+    testdir.makepyfile('''
+        import pytest
+        from py import path
+
+        FIXTURE_DIR = '{0}'
+
+        @pytest.mark.datafiles(
+            path.local(FIXTURE_DIR) / 'fileZZ',
+            )
+        def test_ode(datafiles):
+            assert len(datafiles.listdir()) == 1
+    '''.format(FIXTURE_DIR))
+    result = testdir.runpytest('-s')
+    result.stdout.fnmatch_lines(["E*ValueError:*fileZZ'*is neither file nor dir.*"])
