@@ -5,6 +5,11 @@ pytest-datafiles
 .. image:: https://img.shields.io/travis/omarkohl/pytest-datafiles.svg
         :target: https://travis-ci.org/omarkohl/pytest-datafiles
 
+
+.. image:: https://coveralls.io/repos/omarkohl/pytest-datafiles/badge.svg?branch=master&service=github
+  :target: https://coveralls.io/github/omarkohl/pytest-datafiles?branch=master
+
+
 .. image:: https://img.shields.io/pypi/v/pytest-datafiles.svg
 	:target: https://pypi.python.org/pypi/pytest-datafiles
 
