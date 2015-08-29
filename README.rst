@@ -21,24 +21,46 @@ files and/or directories.
 Features
 --------
 
-This plugin allows you to specify one or several files that will be copied
-to a temporary directory (`tmpdir`_) before the execution of the test.
-This means the original files are not modified and every test runs on its
-own version of the same files.
+This plugin allows you to specify one or several files/directories that will be
+copied to a temporary directory (`tmpdir`_) before the execution of the test.
+This means the original files are not modified and every test runs on its own
+version of the same files.
 
-Files can be specified either as *strings* or as *py.path* objects.
+Files/directories can be specified either as *strings* or as *py.path* objects.
 
 The test function that wants to take advantage of this *datafiles* fixture
 needs to use *datafiles* as one of its parameters (as usual with `pytest`_
 fixtures) and needs to be decorated with *@pytest.mark.datafiles(file1,
-file2, ...)*. See examples below.
+file2, dir1, dir2, ...)*. See examples below.
 
 The *datafiles* variable in your test function is a py.path object
 (`tmpdir`_) where the copied files are located. Under Linux systems this
 will most likely be some subdirectory of */tmp/*.
 
-Currently only files not directories are supported but this will change in
-future releases.
+
+Options
+-------
+
+Following options can be specified as keyword arguments (kwargs) to the
+*@pytest.mark.datafiles* decorator function:
+
+- **keep_top_dir:** For all parameters that represent directories keep that
+  directory instead of only (recursively) copying its content. Possible values
+  are *True* and *False*. *False* is the default value.
+- **on_duplicate:** Specify the action to take when duplicate files/directories
+  are found. Possible values are: *exception*, *ignore* and *replace*. The
+  default value is *exception*.
+
+  - *exception:* An exception is raised instead of copying the duplicate
+    file/directory.
+  - *ignore:* The second (or subsequent) files/directories with the same name
+    as the first one are simply ignored (i.e. the first file/directory with the
+    duplicate name is kept).
+  - *replace:* The second (or subsequent) files/directories with the same name
+    replace the previous ones (i.e. the last file/directory with the duplicate
+    name is kept).
+
+See below for some *examples*.
 
 
 Installation
@@ -139,6 +161,69 @@ define one decorator beforehand and apply it to every test.
         for img in datafiles.listdir():
             print(img)
             #assert process(img) == some_expected_value
+
+Example 4
+~~~~~~~~~
+
+Imagine you have 3 directories (*dir1*, *dir2*, *dir3*) each containing the
+files (*fileA* and *fileB*).
+
+This example might help to clarify the options **on_duplicate** and
+**keep_top_dir**.
+
+.. code-block:: python
+
+    import os
+    import py
+    import pytest
+
+    FIXTURE_DIR = py.path.local(
+        os.path.dirname(
+            os.path.realpath(__file__)
+            )
+        ) / '_fixture_files'
+
+    @pytest.mark.datafiles(
+        FIXTURE_DIR / 'dir1',
+        FIXTURE_DIR / 'dir2',
+        FIXTURE_DIR / 'dir3',
+        on_duplicate='ignore',
+        )
+    def test_dir_ignore(datafiles):
+        # datafiles.listdir() will list fileA and fileB originally from dir1
+        pass
+
+    @pytest.mark.datafiles(
+        FIXTURE_DIR / 'dir1',
+        FIXTURE_DIR / 'dir2',
+        FIXTURE_DIR / 'dir3',
+        on_duplicate='replace',
+        )
+    def test_dir_replace(datafiles):
+        # datafiles.listdir() will list fileA and fileB originally from dir3
+        pass
+
+    @pytest.mark.datafiles(
+        FIXTURE_DIR / 'dir1',
+        FIXTURE_DIR / 'dir2',
+        FIXTURE_DIR / 'dir3',
+        # on_duplicate='exception' is the default and does not need to be
+        # specified
+        )
+    def test_dir_exception(datafiles):
+        # An exception will be raised because of duplicate filename fileA
+        pass
+
+    @pytest.mark.datafiles(
+        FIXTURE_DIR / 'dir1',
+        FIXTURE_DIR / 'dir2',
+        FIXTURE_DIR / 'dir3',
+        keep_top_dir=True,
+        )
+    def test_dir_keep_top_dir(datafiles):
+        # datafiles.listdir() will list dir1, dir2 and dir3 (each containing
+        # fileA and fileB)
+        pass
 
 
 Contributing
