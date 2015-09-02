@@ -14,6 +14,11 @@ pytest-datafiles
 	:target: https://pypi.python.org/pypi/pytest-datafiles
 
 
+.. image:: https://codeclimate.com/github/omarkohl/pytest-datafiles/badges/gpa.svg
+   :target: https://codeclimate.com/github/omarkohl/pytest-datafiles
+   :alt: Code Climate
+
+
 `pytest`_ plugin to create a `tmpdir`_ containing a preconfigured set of
 files and/or directories.
 
