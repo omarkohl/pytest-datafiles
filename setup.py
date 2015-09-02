@@ -22,7 +22,7 @@ LONG_DESCRIPTION = _read('README.rst') + '\n\n' + _read('CHANGELOG.rst')
 
 setup(
     name='pytest-datafiles',
-    version='0.2.dev0',
+    version='0.2',
     py_modules=['pytest_datafiles'],
     url='https://github.com/omarkohl/pytest-datafiles',
     license='MIT',
