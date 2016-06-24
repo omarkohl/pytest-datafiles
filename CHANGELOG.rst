@@ -17,6 +17,16 @@ Removed
 Fixed
 Security
 
+`1.0`_
+~~~~~~
+
+Changed
+
+* Bump version to 1.0 to signal that the plugin is stable
+* Minor refactorization without repercussions for users
+* Only use regular 'paths' (str) instead of py.path objects in documentation
+  examples because they were confusing to some people (unfamiliar with py.path)
+
 `0.2`_
 ~~~~~~
 
@@ -38,7 +48,8 @@ Added
   function
 
 
-.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/0.2...master
+.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/1.0...master
+.. _`1.0`: https://github.com/omarkohl/pytest-datafiles/compare/0.2...1.0
 .. _`0.2`: https://github.com/omarkohl/pytest-datafiles/compare/0.1...0.2
 .. _`0.1`: https://github.com/omarkohl/pytest-datafiles/compare/3c31b2c...0.1
 
