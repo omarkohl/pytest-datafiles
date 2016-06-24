@@ -22,6 +22,9 @@ pytest-datafiles
 `pytest`_ plugin to create a `tmpdir`_ containing a preconfigured set of
 files and/or directories.
 
+**Note about maintenance:** This project is maintained and bug reports or pull
+requests will be adressed. There is little activity because it simply works and
+no changes are required.
 
 Features
 --------
