@@ -89,13 +89,19 @@ the original files but the files are required by the tests.
 
 .. code-block:: python
 
+    import os
     import pytest
 
     @pytest.mark.datafiles('/opt/big_files/film1.mp4')
     def test_fast_forward(datafiles):
+        path = str(datafiles)  # Convert from py.path object to path (str)
+        assert len(os.listdir(path)) == 1
+        assert os.path.isfile(os.path.join(path, 'film1.mp4'))
+        #assert some_operation(os.path.join(path, 'film1.mp4')) == expected_result
+
+        # Using py.path syntax
         assert len(datafiles.listdir()) == 1
         assert (datafiles / 'film1.mp4').check(file=1)
-        # assert some_operation(datafiles / 'film1.mp4') == expected_result
 
 Example 2
 ~~~~~~~~~
@@ -108,19 +114,17 @@ original files under *test_files* are not modified by every test.
 .. code-block:: python
 
     import os
-    import py
     import pytest
 
-    FIXTURE_DIR = py.path.local(
-        os.path.dirname(
-            os.path.realpath(__file__)
-            )
-        ) / 'test_files'
+    FIXTURE_DIR = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        'test_files',
+        )
 
     @pytest.mark.datafiles(
-        FIXTURE_DIR / 'img1.jpg',
-        FIXTURE_DIR / 'img2.jpg',
-        FIXTURE_DIR / 'img3.jpg',
+        os.path.join(FIXTURE_DIR, 'img1.jpg'),
+        os.path.join(FIXTURE_DIR, 'img2.jpg'),
+        os.path.join(FIXTURE_DIR, 'img3.jpg'),
         )
     def test_find_borders(datafiles):
         for img in datafiles.listdir():
@@ -128,8 +132,8 @@ original files under *test_files* are not modified by every test.
             #assert process(img) == some_expected_value
 
     @pytest.mark.datafiles(
-        FIXTURE_DIR / 'img4.jpg',
-        FIXTURE_DIR / 'img5.jpg',
+        os.path.join(FIXTURE_DIR, 'img4.jpg'),
+        os.path.join(FIXTURE_DIR, 'img5.jpg'),
         )
     def test_brightness(datafiles):
         for img in datafiles.listdir():
@@ -144,15 +148,23 @@ define one decorator beforehand and apply it to every test.
 
 .. code-block:: python
 
+    import os
+    import pytest
+
+    FIXTURE_DIR = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        'test_files',
+        )
+
     ALL_IMGS = pytest.mark.datafiles(
-        FIXTURE_DIR / 'img1.jpg',
-        FIXTURE_DIR / 'img2.jpg',
-        FIXTURE_DIR / 'img3.jpg',
-        FIXTURE_DIR / 'img4.jpg',
-        FIXTURE_DIR / 'img5.jpg',
-        FIXTURE_DIR / 'img6.jpg',
-        FIXTURE_DIR / 'img7.jpg',
-        FIXTURE_DIR / 'img8.jpg',
+        os.path.join(FIXTURE_DIR, 'img1.jpg'),
+        os.path.join(FIXTURE_DIR, 'img2.jpg'),
+        os.path.join(FIXTURE_DIR, 'img3.jpg'),
+        os.path.join(FIXTURE_DIR, 'img4.jpg'),
+        os.path.join(FIXTURE_DIR, 'img5.jpg'),
+        os.path.join(FIXTURE_DIR, 'img6.jpg'),
+        os.path.join(FIXTURE_DIR, 'img7.jpg'),
+        os.path.join(FIXTURE_DIR, 'img8.jpg'),
         )
 
     @ALL_IMGS
@@ -179,19 +191,17 @@ This example might help to clarify the options **on_duplicate** and
 .. code-block:: python
 
     import os
-    import py
     import pytest
 
-    FIXTURE_DIR = py.path.local(
-        os.path.dirname(
-            os.path.realpath(__file__)
-            )
-        ) / '_fixture_files'
+    FIXTURE_DIR = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        '_fixture_files',
+        )
 
     @pytest.mark.datafiles(
-        FIXTURE_DIR / 'dir1',
-        FIXTURE_DIR / 'dir2',
-        FIXTURE_DIR / 'dir3',
+        os.path.join(FIXTURE_DIR, 'dir1'),
+        os.path.join(FIXTURE_DIR, 'dir2'),
+        os.path.join(FIXTURE_DIR, 'dir3'),
         on_duplicate='ignore',
         )
     def test_dir_ignore(datafiles):
@@ -199,9 +209,9 @@ This example might help to clarify the options **on_duplicate** and
         pass
 
     @pytest.mark.datafiles(
-        FIXTURE_DIR / 'dir1',
-        FIXTURE_DIR / 'dir2',
-        FIXTURE_DIR / 'dir3',
+        os.path.join(FIXTURE_DIR, 'dir1'),
+        os.path.join(FIXTURE_DIR, 'dir2'),
+        os.path.join(FIXTURE_DIR, 'dir3'),
         on_duplicate='replace',
         )
     def test_dir_replace(datafiles):
@@ -209,9 +219,9 @@ This example might help to clarify the options **on_duplicate** and
         pass
 
     @pytest.mark.datafiles(
-        FIXTURE_DIR / 'dir1',
-        FIXTURE_DIR / 'dir2',
-        FIXTURE_DIR / 'dir3',
+        os.path.join(FIXTURE_DIR, 'dir1'),
+        os.path.join(FIXTURE_DIR, 'dir2'),
+        os.path.join(FIXTURE_DIR, 'dir3'),
         # on_duplicate='exception' is the default and does not need to be
         # specified
         )
@@ -220,15 +230,37 @@ This example might help to clarify the options **on_duplicate** and
         pass
 
     @pytest.mark.datafiles(
-        FIXTURE_DIR / 'dir1',
-        FIXTURE_DIR / 'dir2',
-        FIXTURE_DIR / 'dir3',
+        os.path.join(FIXTURE_DIR, 'dir1'),
+        os.path.join(FIXTURE_DIR, 'dir2'),
+        os.path.join(FIXTURE_DIR, 'dir3'),
         keep_top_dir=True,
         )
     def test_dir_keep_top_dir(datafiles):
         # datafiles.listdir() will list dir1, dir2 and dir3 (each containing
         # fileA and fileB)
         pass
+
+Example 5
+~~~~~~~~~
+
+You can also use py.path object instead of str paths.
+
+.. code-block:: python
+
+    import os
+    import py
+    import pytest
+
+    _dir = os.path.dirname(os.path.realpath(__file__))
+    FIXTURE_DIR = py.path.local(_dir) / 'test_files'
+
+    @pytest.mark.datafiles(
+        FIXTURE_DIR / 'img1.jpg',
+        FIXTURE_DIR / 'img2.jpg',
+        FIXTURE_DIR / 'img3.jpg',
+        )
+    def test_fast_forward(datafiles):
+        assert len(datafiles.listdir()) == 3
 
 
 Contributing
