@@ -160,7 +160,7 @@ def test_keep_top_dir(datafiles):
     path.local(FIXTURE_DIR) / 'dir3',
     on_duplicate='ignore',
     )
-def test_on_duplicate_ignore_dir(datafiles):
+def test_on_duplicate_ignore_dir_with_file(datafiles):
     """
     Verify duplicate files are ignored (i.e. the first one is kept)
 
@@ -241,6 +241,46 @@ def test_on_duplicate_exception2(testdir):
     result.stdout.fnmatch_lines(["E*ValueError:*file1'*already exists*"])
 
 
+def test_on_duplicate_exception_dir(testdir):
+    """
+    Verify that a ValueError is raised when duplicate directories appear
+
+    This is the default behaviour.
+
+    If duplicate files appear (to be copied) then a ValueError is raised. In
+    this example the directory 'subdir1' appears twice.
+    """
+    testdir.makepyfile('''
+        import pytest
+        from py import path
+
+        FIXTURE_DIR = '{0}'
+
+        @pytest.mark.datafiles(
+            path.local(FIXTURE_DIR) / 'dir4' / 'subdir1',
+            path.local(FIXTURE_DIR) / 'dir5' / 'subdir1',
+            keep_top_dir=True,
+            )
+        def test_duplicate_dir(datafiles):
+            assert True
+    '''.format(FIXTURE_DIR))
+    result = testdir.runpytest('-s')
+    result.stdout.fnmatch_lines(["E*ValueError:*subdir1'*already exists*"])
+
+
+@pytest.mark.datafiles(
+    path.local(FIXTURE_DIR) / 'dir4' / 'subdir1',
+    path.local(FIXTURE_DIR) / 'dir5' / 'subdir1',
+    keep_top_dir=True,
+    on_duplicate='ignore',
+    )
+def test_on_duplicate_ignore_dir(datafiles):
+    """
+    Verify that the second (duplicate) directory is ignored.
+    """
+    assert (datafiles / 'subdir1' / 'file1').check(file=1)
+
+
 @pytest.mark.datafiles(
     path.local(FIXTURE_DIR) / 'dir1' / 'file1',
     path.local(FIXTURE_DIR) / 'dir3' / 'file1',
@@ -273,4 +313,50 @@ def test_non_existing_file(testdir):
     result = testdir.runpytest('-s')
     result.stdout.fnmatch_lines([
         "E*ValueError:*fileZZ'*is neither file nor dir.*",
+        ])
+
+
+def test_invalid_keep_top_dir(testdir):
+    """
+    Verify ValueError is raised if parameter isn't boolean
+    """
+    testdir.makepyfile('''
+        import pytest
+        from py import path
+
+        FIXTURE_DIR = '{0}'
+
+        @pytest.mark.datafiles(
+            path.local(FIXTURE_DIR) / 'fileZZ',
+            keep_top_dir='invalid-value',
+            )
+        def test_invalid_param(datafiles):
+            assert True
+    '''.format(FIXTURE_DIR))
+    result = testdir.runpytest('-s')
+    result.stdout.fnmatch_lines([
+        "E*ValueError: 'keep_top_dir' must be True or False*",
+        ])
+
+
+def test_invalid_on_duplicate(testdir):
+    """
+    Verify ValueError is raised if parameter isn't boolean
+    """
+    testdir.makepyfile('''
+        import pytest
+        from py import path
+
+        FIXTURE_DIR = '{0}'
+
+        @pytest.mark.datafiles(
+            path.local(FIXTURE_DIR) / 'fileZZ',
+            on_duplicate='invalid-value',
+            )
+        def test_invalid_param(datafiles):
+            assert True
+    '''.format(FIXTURE_DIR))
+    result = testdir.runpytest('-s')
+    result.stdout.fnmatch_lines([
+        "E*ValueError: 'on_duplicate' must be 'exception', 'ignore' or *",
         ])

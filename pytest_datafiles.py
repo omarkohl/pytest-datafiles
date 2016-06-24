@@ -16,6 +16,50 @@ def _is_str(obj):
         return isinstance(obj, str)
 
 
+def _copy_file(target_dir, entry, on_duplicate):
+    basename = entry.basename
+    if on_duplicate == 'overwrite' or not (target_dir / basename).exists():
+        entry.copy(target_dir)
+    elif on_duplicate == 'exception':
+        raise ValueError(
+            "'%s' already exists (entry %s)" % (basename, entry)
+            )
+    else:
+        # on_duplicate == 'ignore': do nothing with entry
+        pass
+
+
+def _copy_dir(target_dir, entry, on_duplicate, keep_top_dir):
+    basename = entry.basename
+    if keep_top_dir:
+        if on_duplicate == 'overwrite' or not (target_dir / basename).exists():
+            entry.copy(target_dir / basename)
+        elif on_duplicate == 'exception':
+            raise ValueError(
+                "'%s' already exists (entry %s)" % (basename, entry)
+                )
+        # else: on_duplicate == 'ignore': do nothing with entry
+    else:
+        # Regular directory (no keep_top_dir). Need to check every file
+        # for duplicates
+        if on_duplicate == 'overwrite':
+            entry.copy(target_dir)
+            return
+        for e2 in entry.listdir():
+            if not (target_dir / e2.basename).exists():
+                e2.copy(target_dir / e2.basename)
+                continue
+            if on_duplicate == 'exception':
+                # target exists
+                raise ValueError(
+                    "'%s' already exists (entry %s)" % (
+                        (target_dir / e2.basename),
+                        e2,
+                        )
+                    )
+            # on_duplicate == 'ignore': do nothing with e2
+
+
 @pytest.fixture
 def datafiles(request, tmpdir):
     """
@@ -40,36 +84,10 @@ def datafiles(request, tmpdir):
     for entry in content:
         if _is_str(entry):
             entry = path.local(entry)
-        basename = entry.basename
-        if entry.isfile() or (entry.isdir() and keep_top_dir):
-            if on_duplicate == 'overwrite' or not (tmpdir / basename).exists():
-                if entry.isdir():
-                    entry.copy(tmpdir / basename)
-                else:
-                    entry.copy(tmpdir)
-            elif on_duplicate == 'exception':
-                raise ValueError(
-                    "'%s' already exists (entry %s)" % (basename, entry)
-                    )
-            # on_duplicate == 'ignore': do nothing with entry
+        if entry.isfile():
+            _copy_file(tmpdir, entry, on_duplicate)
         elif entry.isdir():
-            # Regular directory (no keep_top_dir). Need to check every file
-            # for duplicates
-            if on_duplicate == 'overwrite':
-                entry.copy(tmpdir)
-                continue
-            for e2 in entry.listdir():
-                if not (tmpdir / e2.basename).exists():
-                    e2.copy(tmpdir / e2.basename)
-                    continue
-                if on_duplicate == 'exception':
-                    raise ValueError(
-                        "'%s' already exists (entry %s)" % (
-                            (tmpdir / e2.basename),
-                            e2,
-                            )
-                        )
-                # on_duplicate == 'ignore': do nothing with e2
+            _copy_dir(tmpdir, entry, on_duplicate, keep_top_dir)
         else:
             raise ValueError(
                 "entry '%s' is neither file nor dir. Possibly it doesn't "
