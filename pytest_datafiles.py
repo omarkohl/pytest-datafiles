@@ -45,16 +45,16 @@ def _copy_dir(target_dir, entry, on_duplicate, keep_top_dir):
         if on_duplicate == 'overwrite':
             entry.copy(target_dir)
             return
-        for e2 in entry.listdir():
-            if not (target_dir / e2.basename).exists():
-                e2.copy(target_dir / e2.basename)
+        for sub_entry in entry.listdir():
+            if not (target_dir / sub_entry.basename).exists():
+                sub_entry.copy(target_dir / sub_entry.basename)
                 continue
             if on_duplicate == 'exception':
                 # target exists
                 raise ValueError(
                     "'%s' already exists (entry %s)" % (
-                        (target_dir / e2.basename),
-                        e2,
+                        (target_dir / sub_entry.basename),
+                        sub_entry,
                         )
                     )
             # on_duplicate == 'ignore': do nothing with e2

@@ -7,7 +7,7 @@ from py import path  # pylint: disable=E0611
 import pytest
 
 
-pytest_plugins = 'pytester'
+pytest_plugins = 'pytester'  # pylint: disable=C0103
 
 
 TEST_DIR = os.path.dirname(os.path.realpath(__file__))
