@@ -39,6 +39,7 @@ setup(
     keywords='pytest datafiles tmpdir',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
+        'Framework :: Pytest',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
@@ -50,5 +51,5 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Testing',
-	]
+        ]
     )
