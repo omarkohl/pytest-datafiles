@@ -27,14 +27,16 @@ def datafiles(request, tmpdir):
     content = request.keywords.get('datafiles').args
     options = {
         'keep_top_dir': False,
-        'on_duplicate': 'exception', # ignore, overwrite
+        'on_duplicate': 'exception',  # ignore, overwrite
         }
     options.update(request.keywords.get('datafiles').kwargs)
     on_duplicate = options['on_duplicate']
     keep_top_dir = options['keep_top_dir']
-    assert keep_top_dir in (True, False), "'keep_top_dir' must be True or False"
-    assert on_duplicate in ('exception', 'ignore', 'overwrite'), \
-        "'on_duplicate' must be 'exception', 'ignore' or 'overwrite'"
+    if keep_top_dir not in (True, False):
+        raise ValueError("'keep_top_dir' must be True or False")
+    if on_duplicate not in ('exception', 'ignore', 'overwrite'):
+        raise ValueError("'on_duplicate' must be 'exception', 'ignore' or "
+                         "'overwrite'")
     for entry in content:
         if _is_str(entry):
             entry = path.local(entry)
@@ -51,7 +53,8 @@ def datafiles(request, tmpdir):
                     )
             # on_duplicate == 'ignore': do nothing with entry
         elif entry.isdir():
-            # Regular directory (no keep_top_dir). Need to check every file for duplicates
+            # Regular directory (no keep_top_dir). Need to check every file
+            # for duplicates
             if on_duplicate == 'overwrite':
                 entry.copy(tmpdir)
                 continue
@@ -61,12 +64,15 @@ def datafiles(request, tmpdir):
                     continue
                 if on_duplicate == 'exception':
                     raise ValueError(
-                        "'%s' already exists (entry %s)" % ((tmpdir / e2.basename), e2)
+                        "'%s' already exists (entry %s)" % (
+                            (tmpdir / e2.basename),
+                            e2,
+                            )
                         )
                 # on_duplicate == 'ignore': do nothing with e2
         else:
             raise ValueError(
-                "entry '%s' is neither file nor dir. Possibly it doesn't " \
+                "entry '%s' is neither file nor dir. Possibly it doesn't "
                 "exist." % entry
                 )
     return tmpdir
