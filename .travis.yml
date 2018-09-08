@@ -9,7 +9,7 @@ python:
   - pypy
 
 install:
-  - pip install coveralls --use-wheel
+  - pip install coveralls
 
 script:
   - python setup.py develop
