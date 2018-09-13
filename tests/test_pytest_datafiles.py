@@ -223,7 +223,6 @@ def test_on_duplicate_exception(testdir):
 
         @pytest.mark.datafiles(
             path.local(FIXTURE_DIR) / 'dir1',
-            path.local(FIXTURE_DIR) / 'dir2',
             path.local(FIXTURE_DIR) / 'dir3',
             )
         def test_ode(datafiles):
