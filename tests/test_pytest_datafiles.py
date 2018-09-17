@@ -323,7 +323,7 @@ def test_non_existing_file(testdir):
     '''.format(FIXTURE_DIR))
     result = testdir.runpytest('-s')
     result.stdout.fnmatch_lines([
-        "E*ValueError:*fileZZ'*is neither file nor dir.*",
+        "E*ValueError:*fileZZ'*does not exist!*",
         ])
 
 
