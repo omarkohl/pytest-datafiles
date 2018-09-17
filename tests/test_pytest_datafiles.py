@@ -212,8 +212,7 @@ def test_on_duplicate_exception(testdir):
     This is the default behaviour.
 
     If duplicate files appear (to be copied) then a ValueError is raised. In
-    this example the file 'file1' appears both in dir1 and dir3 and 'file4'
-    appears both in dir2 and dir3.
+    this example the file 'file1' appears both in dir1 and dir3.
     """
     testdir.makepyfile('''
         import pytest
