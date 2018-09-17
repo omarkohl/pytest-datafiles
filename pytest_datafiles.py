@@ -9,8 +9,11 @@ import pytest
 def _copy(src, target):
     if not src.exists():
         raise ValueError("'%s' does not exist!" % src)
+
     if src.isdir():
         src.copy(target / src.basename)
+    elif src.islink():
+        (target / src.basename).mksymlinkto(src.realpath())
     else:  # file
         src.copy(target)
 
