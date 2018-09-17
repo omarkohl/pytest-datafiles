@@ -7,6 +7,10 @@ import pytest
 
 
 def _copy(src, target):
+    """
+    Copies a single entry (file, dir) named 'src' to 'target'. Softlinks are
+    processed properly as well.
+    """
     if not src.exists():
         raise ValueError("'%s' does not exist!" % src)
 
@@ -19,6 +23,11 @@ def _copy(src, target):
 
 
 def _copy_all(entry_list, target_dir, on_duplicate):
+    """
+    Copies all entries (files, dirs) from 'entry_list' to 'target_dir' taking
+    into account the 'on_duplicate' option (which defines what should happen if
+    an entry already exists: raise an exception, overwrite it or ignore it).
+    """
     for entry in entry_list:
         target_entry = target_dir / entry.basename
         if not target_entry.exists() or on_duplicate == 'overwrite':
@@ -45,6 +54,9 @@ def _is_str(obj):
 
 
 def _to_py_path(entry_list):
+    """
+    Converts a list of entries (str or py.path) to py.path objects.
+    """
     converted = []
     for entry in entry_list:
         if _is_str(entry):
@@ -55,6 +67,11 @@ def _to_py_path(entry_list):
 
 
 def _get_all_entries(entry_list, keep_top_dir):
+    """
+    Returns a list of all entries (files, directories) that should be copied.
+    The main purpose of this function is to evaluate 'keep_top_dir' and in case
+    it should not be kept use all the entries below the top-level directories.
+    """
     all_files = []
 
     entry_list = _to_py_path(entry_list)
