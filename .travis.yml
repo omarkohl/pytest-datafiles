@@ -2,18 +2,20 @@
 
 language: python
 python:
-  - 2.6
   - 2.7
   - 3.4
   - 3.5
+  - 3.6
   - pypy
 
 install:
-  - pip install coveralls --use-wheel
+  - pip install --upgrade pip
+  - pip install --upgrade pytest
+  - pip install coveralls
 
 script:
   - python setup.py develop
-  - coverage run --source=pytest_datafiles.py runtests.py
+  - coverage run --source=pytest_datafiles runtests.py
 
 after_success:
   - coveralls

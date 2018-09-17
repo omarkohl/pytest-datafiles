@@ -68,6 +68,19 @@ def test_multiple_files_str(datafiles):
     assert len((datafiles).listdir()) == 3
 
 
+@pytest.mark.datafiles(FIXTURE_FILES[0])
+@pytest.mark.datafiles(FIXTURE_FILES[1])
+@pytest.mark.datafiles(FIXTURE_FILES[2])
+def test_multiple_marks(datafiles):
+    """
+    Verify multiple marks are combined
+    """
+    assert (datafiles / 'huckleberry.txt').check(file=1)
+    assert (datafiles / 'random.bin').check(file=1)
+    assert (datafiles / 'sparrow.jpg').check(file=1)
+    assert len((datafiles).listdir()) == 3
+
+
 @pytest.mark.datafiles
 def test_no_files1(datafiles):
     """
@@ -210,7 +223,6 @@ def test_on_duplicate_exception(testdir):
 
         @pytest.mark.datafiles(
             path.local(FIXTURE_DIR) / 'dir1',
-            path.local(FIXTURE_DIR) / 'dir2',
             path.local(FIXTURE_DIR) / 'dir3',
             )
         def test_ode(datafiles):
