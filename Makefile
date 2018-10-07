@@ -1,15 +1,15 @@
 .PHONY: clean-pyc clean-build docs clean
 
 help:
-	@echo "clean - remove all build, test, coverage and Python artifacts"
-	@echo "clean-build - remove build artifacts"
-	@echo "clean-pyc - remove Python file artifacts"
-	@echo "clean-test - remove test and coverage artifacts"
-	@echo "lint - check style with Flake8 and Pylint"
-	@echo "test - run tests quickly with Python 3.4"
-	@echo "test-all - run tests on every Python version with tox"
-	@echo "coverage - check code coverage quickly with Python 3.4"
-	@echo "dist - package"
+	@echo "clean        Remove all build, test, coverage and Python artifacts"
+	@echo "clean-build  Remove build artifacts"
+	@echo "clean-pyc    Remove Python file artifacts"
+	@echo "clean-test   Remove test and coverage artifacts"
+	@echo "lint         Check style with Flake8 and Pylint"
+	@echo "test         Run tests quickly with Python 3.5"
+	@echo "test-all     Run tests on every Python version with tox"
+	@echo "coverage     Check code coverage quickly with Python 3"
+	@echo "dist         Package"
 
 clean: clean-build clean-pyc clean-test
 
@@ -48,4 +48,3 @@ dist: clean
 	python setup.py sdist
 	python setup.py bdist_wheel
 	ls -l dist
-
