@@ -273,6 +273,28 @@ Contributions are very welcome. Tests can be run with `tox`_. Please
 ensure the coverage stays at least the same before you submit a pull
 request.
 
+To create and upload a new package first update the version number and then:
+
+.. code-block:: bash
+
+    pip3 install --user -U twine
+    make clean
+    make dist
+    twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+    # Verify the package is usable
+    virtualenv -p python3 test-venv
+    test-venv/bin/pip install --index-url https://test.pypi.org/simple/ pytest-datafiles
+    # Create some test_example.py (e.g. with one of the examples above)
+    test-venv/bin/pytest test_example.py
+    # Set the git tag for final release
+    git tag -a 2.0
+    git push --tags
+    # Upload the package for final release
+    twine upload dist/*
+
+Of course this will only work if you have the necessary PyPI credentials for
+this package.
+
 
 License
 -------
