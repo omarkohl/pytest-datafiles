@@ -23,23 +23,23 @@ pytest-datafiles
 files and/or directories.
 
 **Note about maintenance:** This project is maintained and bug reports or pull
-requests will be adressed. There is little activity because it simply works and
+requests will be addressed. There is little activity because it simply works and
 no changes are required.
 
 Features
 --------
 
-This plugin allows you to specify one or several files/directories that will be
+This plugin allows you to specify one or several files/directories that are
 copied to a temporary directory (`tmpdir`_) before the execution of the test.
 This means the original files are not modified and every test runs on its own
 version of the same files.
 
 Files/directories can be specified either as *strings* or as *py.path* objects.
 
-The test function that wants to take advantage of this *datafiles* fixture
-needs to use *datafiles* as one of its parameters (as usual with `pytest`_
-fixtures) and needs to be decorated with *@pytest.mark.datafiles(file1,
-file2, dir1, dir2, ...)*. See examples below.
+To take advantage of the *datafiles* fixture in a test function, add
+*datafiles* as one of the test function parameters (per usual with `pytest`_
+fixtures) and decorate the test function with *@pytest.mark.datafiles(file1,
+file2, dir1, dir2, ...)*. See the examples below.
 
 The *datafiles* variable in your test function is a py.path object
 (`tmpdir`_) where the copied files are located. Under Linux systems this
@@ -49,12 +49,12 @@ will most likely be some subdirectory of */tmp/*.
 Options
 -------
 
-Following options can be specified as keyword arguments (kwargs) to the
+The following options can be specified as keyword arguments (kwargs) to the
 *@pytest.mark.datafiles* decorator function:
 
-- **keep_top_dir:** For all parameters that represent directories keep that
+- **keep_top_dir:** For all parameters that represent directories, keep that
   directory instead of only (recursively) copying its content. Possible values
-  are *True* and *False*. *False* is the default value.
+  are *True* or *False*. *False* is the default value.
 - **on_duplicate:** Specify the action to take when duplicate files/directories
   are found. Possible values are: *exception*, *ignore* and *replace*. The
   default value is *exception*.
@@ -62,10 +62,10 @@ Following options can be specified as keyword arguments (kwargs) to the
   - *exception:* An exception is raised instead of copying the duplicate
     file/directory.
   - *ignore:* The second (or subsequent) files/directories with the same name
-    as the first one are simply ignored (i.e. the first file/directory with the
+    as the first one are simply ignored (i.e., the first file/directory with the
     duplicate name is kept).
   - *replace:* The second (or subsequent) files/directories with the same name
-    replace the previous ones (i.e. the last file/directory with the duplicate
+    replace the previous ones (i.e., the last file/directory with the duplicate
     name is kept).
 
 See below for some *examples*.
@@ -85,10 +85,11 @@ Usage
 Example 1
 ~~~~~~~~~
 
-One possible use case would be: You are running tests on very big files
-that are not included/packaged with your tests. For instance big video
-files stored under */opt/big_files/* . You don't want your tests modifying
-the original files but the files are required by the tests.
+One possible use case is when you are running tests on very big files that are
+not included or packaged with your tests. For example, your test files are
+large video files stored under */opt/big_files/* . You don't want your tests modifying
+the original files, but the files are required by the tests. You can reference these
+data files in your test method as follows:
 
 .. code-block:: python
 
@@ -109,10 +110,10 @@ the original files but the files are required by the tests.
 Example 2
 ~~~~~~~~~
 
-Another use case is: In the directory where your tests are located you
-placed a directory named *test_files*. Here you placed a lot of
-images you want to run tests on. By using this plugin you make sure the
-original files under *test_files* are not modified by every test.
+Now for another use case: let's say in the directory where your tests are located, you
+place a directory named *test_files*. Here you have a lot of images you want to run tests
+on. By using this plugin, you make sure the original files under *test_files* are not
+modified by every test.
 
 .. code-block:: python
 
@@ -147,7 +148,7 @@ Example 3
 ~~~~~~~~~
 
 If all (or many) of your tests rely on the same files it can be easier to
-define one decorator beforehand and apply it to every test.
+define one decorator beforehand and apply it to every test like this example:
 
 .. code-block:: python
 
@@ -185,11 +186,10 @@ define one decorator beforehand and apply it to every test.
 Example 4
 ~~~~~~~~~
 
-Imagine you have 3 directories (*dir1*, *dir2*, *dir3*) each containing the
-files (*fileA* and *fileB*).
+Imagine you have 3 directories (*dir1*, *dir2*, *dir3*) each containing the files
+(*fileA* and *fileB*).
 
-This example might help to clarify the options **on_duplicate** and
-**keep_top_dir**.
+This example clarifies the options **on_duplicate** and **keep_top_dir**.
 
 .. code-block:: python
 
@@ -246,7 +246,7 @@ This example might help to clarify the options **on_duplicate** and
 Example 5
 ~~~~~~~~~
 
-You can also use py.path object instead of str paths.
+You can also use a py.path object instead of str paths.
 
 .. code-block:: python
 
@@ -269,8 +269,8 @@ You can also use py.path object instead of str paths.
 Contributing
 ------------
 
-Contributions are very welcome. Tests can be run with `tox`_, please
-ensure the coverage at least stays the same before you submit a pull
+Contributions are very welcome. Tests can be run with `tox`_. Please
+ensure the coverage stays at least the same before you submit a pull
 request.
 
 
