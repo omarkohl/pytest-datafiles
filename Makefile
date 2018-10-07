@@ -35,7 +35,7 @@ lint:
 	tox -e lint
 
 test:
-	tox -e py34
+	tox -e py35
 
 test-all:
 	tox

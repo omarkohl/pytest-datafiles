@@ -212,8 +212,7 @@ def test_on_duplicate_exception(testdir):
     This is the default behaviour.
 
     If duplicate files appear (to be copied) then a ValueError is raised. In
-    this example the file 'file1' appears both in dir1 and dir3 and 'file4'
-    appears both in dir2 and dir3.
+    this example the file 'file1' appears both in dir1 and dir3.
     """
     testdir.makepyfile('''
         import pytest
@@ -324,7 +323,7 @@ def test_non_existing_file(testdir):
     '''.format(FIXTURE_DIR))
     result = testdir.runpytest('-s')
     result.stdout.fnmatch_lines([
-        "E*ValueError:*fileZZ'*is neither file nor dir.*",
+        "E*ValueError:*fileZZ'*does not exist!*",
         ])
 
 
@@ -372,3 +371,33 @@ def test_invalid_on_duplicate(testdir):
     result.stdout.fnmatch_lines([
         "E*ValueError: 'on_duplicate' must be 'exception', 'ignore' or *",
         ])
+
+@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'sparrow_link.jpg'))
+def test_copy_symlink(datafiles):
+    """
+    Verify that symlinks are copied and not their targets.
+    """
+    assert len(datafiles.listdir()) == 1
+    assert (datafiles / 'sparrow_link.jpg').check(link=1)
+
+
+@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'dir6'))
+def test_copy_symlink_in_dir(datafiles):
+    """
+    Verify that symlinks are copied and not their targets.
+    """
+    assert len(datafiles.listdir()) == 1
+    assert (datafiles / 'sparrow_link.jpg').check(link=1)
+
+
+@pytest.mark.datafiles(
+    os.path.join(FIXTURE_DIR, 'dir6'),
+    keep_top_dir=True,
+    )
+def test_copy_symlink_in_dir2(datafiles):
+    """
+    Verify that symlinks are copied and not their targets.
+    """
+    assert len(datafiles.listdir()) == 1
+    assert len((datafiles / 'dir6').listdir()) == 1
+    assert (datafiles / 'dir6' / 'sparrow_link.jpg').check(link=1)
