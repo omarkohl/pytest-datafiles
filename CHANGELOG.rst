@@ -17,6 +17,24 @@ Removed
 Fixed
 Security
 
+`2.0`_
+~~~~~~
+
+Added
+
+* Explicit support for Python 3.6 (no changes were necessary)
+
+Removed
+
+* BREAKING CHANGE: Python 2.6 is no longer supported (because we rely on pytest
+  >= 3.6)
+
+Fixed
+
+* Use the new pytest mark API to fix MarkInfo warnings (`#2`_)
+* BREAKING CHANGE: Symlinks are now copied as links instead of copying the
+  target they point to (`#1`_)
+
 `1.0`_
 ~~~~~~
 
@@ -48,10 +66,15 @@ Added
   function
 
 
-.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/1.0...master
+.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/2.0...master
+.. _`2.0`: https://github.com/omarkohl/pytest-datafiles/compare/1.0...2.0
 .. _`1.0`: https://github.com/omarkohl/pytest-datafiles/compare/0.2...1.0
 .. _`0.2`: https://github.com/omarkohl/pytest-datafiles/compare/0.1...0.2
 .. _`0.1`: https://github.com/omarkohl/pytest-datafiles/compare/3c31b2c...0.1
+
+
+.. _`#1`: https://github.com/omarkohl/pytest-datafiles/issues/1
+.. _`#2`: https://github.com/omarkohl/pytest-datafiles/issues/2
 
 
 .. _`Semantic Versioning`: http://semver.org/
