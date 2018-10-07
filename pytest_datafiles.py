@@ -43,29 +43,6 @@ def _copy_all(entry_list, target_dir, on_duplicate):
             continue
 
 
-def _is_str(obj):
-    """
-    Check if 'obj' is a string (both Python 2 and 3)
-    """
-    try:
-        return isinstance(obj, basestring)  # pylint: disable=E0602
-    except NameError:
-        return isinstance(obj, str)
-
-
-def _to_py_path(entry_list):
-    """
-    Converts a list of entries (str or py.path) to py.path objects.
-    """
-    converted = []
-    for entry in entry_list:
-        if _is_str(entry):
-            converted.append(path.local(entry))
-        else:
-            converted.append(entry)
-    return converted
-
-
 def _get_all_entries(entry_list, keep_top_dir):
     """
     Returns a list of all entries (files, directories) that should be copied.
@@ -74,7 +51,7 @@ def _get_all_entries(entry_list, keep_top_dir):
     """
     all_files = []
 
-    entry_list = _to_py_path(entry_list)
+    entry_list = [path.local(entry) for entry in entry_list]
 
     if keep_top_dir:
         all_files = entry_list
