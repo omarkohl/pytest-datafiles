@@ -283,6 +283,7 @@ To create and upload a new package first update the version number and then:
     twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     # Verify the package is usable
     virtualenv -p python3 test-venv
+    test-venv/bin/pip install pytest
     test-venv/bin/pip install --index-url https://test.pypi.org/simple/ pytest-datafiles
     # Create some test_example.py (e.g. with one of the examples above)
     test-venv/bin/pytest test_example.py
