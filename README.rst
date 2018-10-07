@@ -293,6 +293,8 @@ To create and upload a new package first update the version number and then:
     # Upload the package for final release
     twine upload dist/*
 
+Finally create a release on GitHub and add the packages from dist/* to it.
+
 Of course this will only work if you have the necessary PyPI credentials for
 this package.
 
