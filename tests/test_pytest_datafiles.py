@@ -86,14 +86,14 @@ def test_no_files1(datafiles):
     """
     Verify if datafiles marker is set but empty the directory is empty
     """
-    assert len((datafiles).listdir()) == 0
+    assert not datafiles.listdir()
 
 
 def test_no_files2(datafiles):
     """
     Verify if datafiles marker is not set the directory is empty
     """
-    assert len((datafiles).listdir()) == 0
+    assert not datafiles.listdir()
 
 
 @pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'dir1'))
@@ -371,6 +371,7 @@ def test_invalid_on_duplicate(testdir):
     result.stdout.fnmatch_lines([
         "E*ValueError: 'on_duplicate' must be 'exception', 'ignore' or *",
         ])
+
 
 @pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'sparrow_link.jpg'))
 def test_copy_symlink(datafiles):
