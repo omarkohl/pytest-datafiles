@@ -5,6 +5,8 @@ Module containing a 'datafiles' fixture for pytest Tests.
 from py import path  # pylint: disable=E0611
 import pytest
 
+def pytest_configure(config):
+    config.addinivalue_line("markers", "datafiles(path): path to tmp data files")
 
 def _copy(src, target):
     """
