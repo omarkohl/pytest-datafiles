@@ -6,7 +6,7 @@ authors = ["Omar Kohl <omarkohl@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.4"
+python = "~2.7 || ^3.5"
 pytest = "^3.6"
 
 [tool.poetry.dev-dependencies]
@@ -24,7 +24,7 @@ wheel = "*"
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py34,py35,py36,py37
+envlist = py35,py36,py37
 
 [testenv]
 whitelist_externals = poetry
