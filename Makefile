@@ -31,20 +31,25 @@ clean-test:
 	rm -f .coverage
 	rm -fr htmlcov/
 
-lint:
-	tox -e lint
+install:
+	@poetry install
 
-test:
-	tox -e py35
+lint: install
+	@poetry run pylint pytest_datafiles.py
+
+test: install
+	@poetry run pytest
 
 test-all:
-	tox
+	@poetry run tox
 
-coverage:
-	tox -e coverage
-	xdg-open htmlcov/index.html
+coverage: install
+	@poetry run pytest \
+		--cov-config .coveragerc \
+		--cov-report html \
+		--cov=pytest_datafiles \
+		tests
 
 dist: clean
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
+	@poetry build
+
