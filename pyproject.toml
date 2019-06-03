@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "pytest-datafiles"
+version = "2.0.0"
+description = "py.test plugin to create a 'tmpdir' containing predefined files/directories."
+authors = ["Omar Kohl <omarkohl@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.4"
+pytest = "^3.6"
+
+[tool.poetry.dev-dependencies]
+autopep8 = "*"
+codecov = "*"
+flake8 = "*"
+pylint = "*"
+pytest-cov = "*"
+setuptools = "*"
+tox = "*"
+twine = "*"
+wheel = "*"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist = py34,py35,py36,py37
+
+[testenv]
+whitelist_externals = poetry
+commands =
+    poetry install -vvv
+    poetry run pytest
+"""
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
