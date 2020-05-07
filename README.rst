@@ -323,8 +323,8 @@ Some ideas to improve this project were taken from the `Cookiecutter`_
 templates `cookiecutter-pypackage`_ and `cookiecutter-pytest-plugin`_.
 
 
-.. _`pytest`: https://pytest.org/latest/contents.html
-.. _`tmpdir`: https://pytest.org/latest/tmpdir.html
+.. _`pytest`: https://docs.pytest.org/en/latest/contents.html
+.. _`tmpdir`: https://docs.pytest.org/en/latest/tmpdir.html
 .. _`tox`: https://tox.readthedocs.org/en/latest/
 .. _`MIT License`: http://opensource.org/licenses/MIT
 .. _`file an issue`: https://github.com/omarkohl/pytest-datafiles/issues
