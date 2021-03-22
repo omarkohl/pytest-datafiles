@@ -17,7 +17,7 @@ DEPENDENCIES = [
     ]
 
 DESCRIPTION = ("py.test plugin to create a 'tmpdir' containing predefined "
-	       "files/directories.")
+               "files/directories.")
 LONG_DESCRIPTION = _read('README.rst') + '\n\n' + _read('CHANGELOG.rst')
 
 setup(
@@ -35,7 +35,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     entry_points={
         'pytest11': ['pytest_datafiles = pytest_datafiles'],
-	},
+    },
     keywords='pytest datafiles tmpdir',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
