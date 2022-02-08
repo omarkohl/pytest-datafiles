@@ -1,6 +1,8 @@
 """
 Module containing a 'datafiles' fixture for pytest Tests.
 """
+import os
+from functools import partial
 
 from py import path  # pylint: disable=E0611
 import pytest
@@ -64,30 +66,49 @@ def _get_all_entries(entry_list, keep_top_dir):
     return all_files
 
 
-@pytest.fixture
-def datafiles(request, tmpdir):
-    """
-    pytest fixture to define a 'tmpdir' containing files or directories
-    specified with a 'datafiles' mark.
-    """
-    entry_list = []
-    options = {
-        'keep_top_dir': False,
-        'on_duplicate': 'exception',  # ignore, overwrite
+class DataFilesPlugin:
+    def __init__(self, root=""):
+        self.root = root
+
+    @pytest.fixture
+    def datafiles(self, request, tmpdir):
+        """
+        pytest fixture to define a 'tmpdir' containing files or directories
+        specified with a 'datafiles' mark.
+        """
+        entry_list = []
+        options = {
+            "keep_top_dir": False,
+            "on_duplicate": "exception",  # ignore, overwrite
         }
-    for mark in request.node.iter_markers('datafiles'):
-        entry_list.extend(mark.args)
-        options.update(mark.kwargs)
+        for mark in request.node.iter_markers("datafiles"):
+            entries = map(partial(os.path.join, self.root), mark.args)
+            entry_list.extend(entries)
+            options.update(mark.kwargs)
 
-    on_duplicate = options['on_duplicate']
-    keep_top_dir = options['keep_top_dir']
+        on_duplicate = options["on_duplicate"]
+        keep_top_dir = options["keep_top_dir"]
 
-    if keep_top_dir not in (True, False):
-        raise ValueError("'keep_top_dir' must be True or False")
-    if on_duplicate not in ('exception', 'ignore', 'overwrite'):
-        raise ValueError("'on_duplicate' must be 'exception', 'ignore' or "
-                         "'overwrite'")
+        if keep_top_dir not in (True, False):
+            raise ValueError("'keep_top_dir' must be True or False")
+        if on_duplicate not in ("exception", "ignore", "overwrite"):
+            raise ValueError(
+                "'on_duplicate' must be 'exception', 'ignore' or " "'overwrite'"
+            )
 
-    all_entries = _get_all_entries(entry_list, keep_top_dir)
-    _copy_all(all_entries, tmpdir, on_duplicate)
-    return tmpdir
+        all_entries = _get_all_entries(entry_list, keep_top_dir)
+        _copy_all(all_entries, tmpdir, on_duplicate)
+        return tmpdir
+
+
+def pytest_addoption(parser):
+    parser.addini("datafiles_root", "Root folder for datafiles fixure")
+
+
+def pytest_configure(config):
+    root = config.getini("datafiles_root")
+    config.pluginmanager.register(DataFilesPlugin(root))
+    config.addinivalue_line(
+        "markers",
+        "datafiles(*args): Set list of files to use " "with the datafile fixure.",
+    )
