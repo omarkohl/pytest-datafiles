@@ -2,9 +2,10 @@
 Module containing a 'datafiles' fixture for pytest Tests.
 """
 import os
+import shutil
 from functools import partial
 
-from py import path  # pylint: disable=E0611
+from pathlib import Path
 import pytest
 
 
@@ -16,12 +17,12 @@ def _copy(src, target):
     if not src.exists():
         raise ValueError("'%s' does not exist!" % src)
 
-    if src.isdir():
-        src.copy(target / src.basename)
-    elif src.islink():
-        (target / src.basename).mksymlinkto(src.realpath())
+    if src.is_dir():
+        shutil.copytree(src, target / src.name)
+    elif src.is_simlink():
+        os.symlink(os.readlink(src), target / src.name)
     else:  # file
-        src.copy(target)
+        shutil.copy(src, target)
 
 
 def _copy_all(entry_list, target_dir, on_duplicate):
@@ -31,7 +32,7 @@ def _copy_all(entry_list, target_dir, on_duplicate):
     an entry already exists: raise an exception, overwrite it or ignore it).
     """
     for entry in entry_list:
-        target_entry = target_dir / entry.basename
+        target_entry = target_dir / entry.name
         if not target_entry.exists() or on_duplicate == 'overwrite':
             _copy(entry, target_dir)
         elif on_duplicate == 'exception':
@@ -53,14 +54,14 @@ def _get_all_entries(entry_list, keep_top_dir):
     """
     all_files = []
 
-    entry_list = [path.local(entry) for entry in entry_list]
+    entry_list = [Path(entry) for entry in entry_list]
 
     if keep_top_dir:
         all_files = entry_list
     else:
         for entry in entry_list:
-            if entry.isdir():
-                all_files.extend(entry.listdir())
+            if entry.is_dir():
+                all_files.extend(list(entry.glob('*')))
             else:
                 all_files.append(entry)
     return all_files
@@ -68,7 +69,7 @@ def _get_all_entries(entry_list, keep_top_dir):
 
 class DataFilesPlugin:
     def __init__(self, root=""):
-        self.root = root
+        self.root = Path(root)
 
     @pytest.fixture
     def datafiles(self, request, tmpdir):
@@ -82,7 +83,7 @@ class DataFilesPlugin:
             "on_duplicate": "exception",  # ignore, overwrite
         }
         for mark in request.node.iter_markers("datafiles"):
-            entries = map(partial(os.path.join, self.root), mark.args)
+            entries = [self.root / entry for entry in mark.args]
             entry_list.extend(entries)
             options.update(mark.kwargs)
 
@@ -97,7 +98,7 @@ class DataFilesPlugin:
             )
 
         all_entries = _get_all_entries(entry_list, keep_top_dir)
-        _copy_all(all_entries, tmpdir, on_duplicate)
+        _copy_all(all_entries, Path(tmpdir), on_duplicate)
         return tmpdir
 
 
