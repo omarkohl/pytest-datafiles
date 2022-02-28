@@ -19,7 +19,7 @@ def _copy(src, target):
 
     if src.is_dir():
         shutil.copytree(src, target / src.name)
-    elif src.is_simlink():
+    elif src.is_symlink():
         os.symlink(os.readlink(src), target / src.name)
     else:  # file
         shutil.copy(src, target)
