@@ -2,8 +2,23 @@
 Module containing a 'datafiles' fixture for pytest Tests.
 """
 
-from py import path  # pylint: disable=E0611
 import pytest
+from py import path  # pylint: disable=E0611
+
+from _pytest.config import Config
+
+
+def pytest_configure(config: Config) -> None:
+    config.addinivalue_line(
+        "markers",
+        "datafiles(path, ..., *, keep_top_dir=False, on_duplicate='exception'): "
+        "Paths to copy to tmpdir before the test. 'keep_top_dir': For all "
+        "parameters that represent directories, keep that directory instead of "
+        "only (recursively) copying its content (default is False). Use the "
+        "option 'on_duplicate' to specify the action to take when duplicate "
+        "files/directories are found. Possible values are: exception, ignore and "
+        "replace. The default value is exception.",
+    )
 
 
 def _copy(src, target):
