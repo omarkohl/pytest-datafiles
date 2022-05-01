@@ -17,6 +17,14 @@ Removed
 Fixed
 Security
 
+`2.0.1`_
+~~~~~~
+
+Fixed
+
+* Register custom marker 'datafiles' to avoid PytestUnknownMarkWarning
+  (`#18`_)
+
 `2.0`_
 ~~~~~~
 
@@ -66,7 +74,8 @@ Added
   function
 
 
-.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/2.0...master
+.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/2.0.1...master
+.. _`2.0.1`: https://github.com/omarkohl/pytest-datafiles/compare/2.0...2.0.1
 .. _`2.0`: https://github.com/omarkohl/pytest-datafiles/compare/1.0...2.0
 .. _`1.0`: https://github.com/omarkohl/pytest-datafiles/compare/0.2...1.0
 .. _`0.2`: https://github.com/omarkohl/pytest-datafiles/compare/0.1...0.2
@@ -75,6 +84,7 @@ Added
 
 .. _`#1`: https://github.com/omarkohl/pytest-datafiles/issues/1
 .. _`#2`: https://github.com/omarkohl/pytest-datafiles/issues/2
+.. _`#18`: https://github.com/omarkohl/pytest-datafiles/issues/18
 
 
 .. _`Semantic Versioning`: http://semver.org/
