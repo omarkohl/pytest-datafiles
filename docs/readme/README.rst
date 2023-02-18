@@ -96,7 +96,7 @@ Your tests may need to be adjusted.
 Usage
 -----
 
-These examples can also be found in `src/pytest_datafiles/examples`.
+These examples can also be found in `tests/examples`.
 
 Example 1
 ~~~~~~~~~
