@@ -17,6 +17,14 @@ Removed
 Fixed
 Security
 
+`3.0`_
+~~~~~~
+
+Changed
+
+* BREAKING CHANGE: Using `pathlib.Path` instead of `py.path` (`#7`_)
+* BREAKING CHANGE: Removed support for Python 2.7 and Python 3 <= 3.6
+
 `2.0.1`_
 ~~~~~~~~
 
@@ -74,7 +82,8 @@ Added
   function
 
 
-.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/2.0.1...master
+.. _`Unreleased`: https://github.com/omarkohl/pytest-datafiles/compare/3.0...master
+.. _`3.0`: https://github.com/omarkohl/pytest-datafiles/compare/2.0.1...3.0
 .. _`2.0.1`: https://github.com/omarkohl/pytest-datafiles/compare/2.0...2.0.1
 .. _`2.0`: https://github.com/omarkohl/pytest-datafiles/compare/1.0...2.0
 .. _`1.0`: https://github.com/omarkohl/pytest-datafiles/compare/0.2...1.0
@@ -84,6 +93,7 @@ Added
 
 .. _`#1`: https://github.com/omarkohl/pytest-datafiles/issues/1
 .. _`#2`: https://github.com/omarkohl/pytest-datafiles/issues/2
+.. _`#7`: https://github.com/omarkohl/pytest-datafiles/issues/7
 .. _`#18`: https://github.com/omarkohl/pytest-datafiles/issues/18
 
 

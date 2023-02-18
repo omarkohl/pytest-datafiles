@@ -5,3 +5,6 @@ build/
 dist/
 htmlcov/
 pytest_datafiles.egg-info/
+.doctrees/
+.idea/
+.venv
