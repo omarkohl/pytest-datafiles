@@ -10,7 +10,6 @@ help:
 	@echo "test-all     Run tests on every Python version with tox"
 	@echo "coverage     Check code coverage quickly with Python 3"
 	@echo "dist         Package"
-	@echo "docs         Generate docs from docs/ (eg README.rst)"
 
 clean: clean-build clean-pyc clean-test
 
@@ -54,11 +53,7 @@ coverage:
 	tox -e coverage
 	command -v xdg-open && xdg-open htmlcov/index.html || true
 
-dist: docs | clean
+dist: clean
 	python3 setup.py sdist
 	python3 setup.py bdist_wheel
 	ls -l dist
-
-docs:
-	touch README.rst
-	tox -e doc
