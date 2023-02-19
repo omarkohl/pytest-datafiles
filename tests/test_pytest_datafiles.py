@@ -23,7 +23,7 @@ FIXTURE_FILES = [
 
 
 @pytest.mark.datafiles(FIXTURE_FILES[0])  # huckleberry.txt
-def test_single_file_pypath(datafiles):
+def test_single_file_path(datafiles):
     """
     Verify that a single file (pathlib.Path) is copied correctly
     """
@@ -41,7 +41,7 @@ def test_single_file_str(datafiles):
 
 
 @pytest.mark.datafiles(*FIXTURE_FILES)
-def test_multiple_files_pypath(datafiles):
+def test_multiple_files_path(datafiles):
     """
     Verify multiple files (pathlib.Path) are copied correctly
     """
