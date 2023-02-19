@@ -1,4 +1,4 @@
-.. This file will be rendered to teh README.rst in the root
+.. This file will be rendered to the README.rst in the root
 
 ================
 pytest-datafiles
@@ -89,7 +89,7 @@ instead of `py.path`.
 
 Your tests may need to be adjusted.
 
-.. literalinclude:: ../../tests/examples/test_example_upgradev3.py
+.. literalinclude:: ../../tests/examples/example_upgradev3.py
     :language: python
 
 
@@ -107,7 +107,7 @@ large video files stored under */opt/big_files/* . You don't want your tests mod
 the original files, but the files are required by the tests. You can reference these
 data files in your test method as follows:
 
-.. literalinclude:: ../../tests/examples/test_example_1.py
+.. literalinclude:: ../../tests/examples/example_1.py
     :language: python
 
 Example 2
@@ -118,7 +118,7 @@ place a directory named *test_files*. Here you have a lot of images you want to 
 on. By using this plugin, you make sure the original files under *test_files* are not
 modified by every test.
 
-.. literalinclude:: ../../tests/examples/test_example_2.py
+.. literalinclude:: ../../tests/examples/example_2.py
     :language: python
 
 Example 3
@@ -127,7 +127,7 @@ Example 3
 If all (or many) of your tests rely on the same files it can be easier to
 define one decorator beforehand and apply it to every test like this example:
 
-.. literalinclude:: ../../tests/examples/test_example_3.py
+.. literalinclude:: ../../tests/examples/example_3.py
     :language: python
 
 Example 4
@@ -138,7 +138,7 @@ Imagine you have 3 directories (*dir1*, *dir2*, *dir3*) each containing the file
 
 This example clarifies the options **on_duplicate** and **keep_top_dir**.
 
-.. literalinclude:: ../../tests/examples/test_example_4.py
+.. literalinclude:: ../../tests/examples/example_4.py
     :language: python
 
 Example 5
@@ -146,7 +146,7 @@ Example 5
 
 You can also use a str paths.
 
-.. literalinclude:: ../../tests/examples/test_example_5.py
+.. literalinclude:: ../../tests/examples/example_5.py
     :language: python
 
 

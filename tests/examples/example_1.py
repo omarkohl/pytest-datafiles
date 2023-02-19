@@ -3,7 +3,7 @@ import os
 import pytest
 
 
-@pytest.mark.datafiles('/tmp/big_files/film1.mp4')
+@pytest.mark.datafiles('/opt/big_files/film1.mp4')
 def test_fast_forward(datafiles):
     """Work with a copy of the big file."""
     assert len(list(datafiles.iterdir())) == 1
@@ -11,7 +11,7 @@ def test_fast_forward(datafiles):
     # assert some_operation(datafiles / 'film1.mp4') == expected_result
 
 
-@pytest.mark.datafiles('/tmp/big_files/film1.mp4')
+@pytest.mark.datafiles('/opt/big_files/film1.mp4')
 def test_fast_forward_alternative(datafiles):
     """Work with a copy of the bigfile, using `str`."""
     path = str(datafiles)  # Convert from py.path object to path (str)

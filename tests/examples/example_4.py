@@ -51,35 +51,9 @@ def test_dir_overwrite(datafiles):
     FIXTURE_DIR / 'dir3',
     # on_duplicate='exception' is the default
 )
-@pytest.mark.skip(
-    reason='will raise an exception that cannot be caught in the test itself'
-)
 def test_dir_exception(datafiles):  # pylint: disable=W0613
     """Raise exception because of duplicate filename fileA."""
     assert False
-
-
-def test_dir_exception_generated(testdir):
-    """Raise exception because of duplicate filename fileA."""
-    testdir.makepyfile(f'''
-        import pytest
-        from pathlib import Path
-
-        FIXTURE_DIR = Path('{FIXTURE_DIR}')
-
-        @pytest.mark.datafiles(
-            FIXTURE_DIR / 'dir1',
-            FIXTURE_DIR / 'dir2',
-            FIXTURE_DIR / 'dir3',
-            # on_duplicate='exception' is the default
-        )
-        def test_exception(datafiles):
-            assert True
-    ''')
-    result = testdir.runpytest('-s')
-    result.stdout.fnmatch_lines([
-        'E*ValueError: *already exists*',
-    ])
 
 
 @pytest.mark.datafiles(
