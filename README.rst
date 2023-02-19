@@ -1,5 +1,3 @@
-.. This file will be rendered to the README.rst in the root
-
 ================
 pytest-datafiles
 ================
