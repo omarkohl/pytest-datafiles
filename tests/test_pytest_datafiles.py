@@ -10,10 +10,10 @@ import pytest
 pytest_plugins = 'pytester'  # pylint: disable=C0103
 
 
-TEST_DIR = os.path.dirname(os.path.realpath(__file__))
-FIXTURE_DIR = os.path.join(TEST_DIR, '_fixture_files')
+TEST_DIR = Path(__file__).parent.resolve()
+FIXTURE_DIR = TEST_DIR / '_fixture_files'
 FIXTURE_FILES = [
-    os.path.join(FIXTURE_DIR, name)
+    FIXTURE_DIR / name
     for name in [
         'huckleberry.txt',
         'random.bin',
@@ -22,20 +22,16 @@ FIXTURE_FILES = [
     ]
 
 
-@pytest.mark.datafiles(
-    Path(
-        FIXTURE_FILES[0],  # huckleberry.txt
-        )
-    )
+@pytest.mark.datafiles(FIXTURE_FILES[0])  # huckleberry.txt
 def test_single_file_pypath(datafiles):
     """
-    Verify that a single file (py.path.local) is copied correctly
+    Verify that a single file (pathlib.Path) is copied correctly
     """
     assert (datafiles / 'huckleberry.txt').is_file()
     assert 'Mark Twain' in (datafiles / 'huckleberry.txt').read_text('utf-8')
 
 
-@pytest.mark.datafiles(FIXTURE_FILES[0])  # huckleberry.txt
+@pytest.mark.datafiles(str(FIXTURE_FILES[0]))  # huckleberry.txt
 def test_single_file_str(datafiles):
     """
     Verify that a single file (str) is copied correctly
@@ -44,12 +40,10 @@ def test_single_file_str(datafiles):
     assert 'Mark Twain' in (datafiles / 'huckleberry.txt').read_text('utf-8')
 
 
-@pytest.mark.datafiles(
-    *[Path(p) for p in FIXTURE_FILES]
-    )
+@pytest.mark.datafiles(*FIXTURE_FILES)
 def test_multiple_files_pypath(datafiles):
     """
-    Verify multiple files (py.path.local) are copied correctly
+    Verify multiple files (pathlib.Path) are copied correctly
     """
     assert (datafiles / 'huckleberry.txt').is_file()
     assert (datafiles / 'random.bin').is_file()
@@ -57,7 +51,7 @@ def test_multiple_files_pypath(datafiles):
     assert len(list(datafiles.iterdir())) == 3
 
 
-@pytest.mark.datafiles(*FIXTURE_FILES)
+@pytest.mark.datafiles(*[str(f) for f in FIXTURE_FILES])
 def test_multiple_files_str(datafiles):
     """
     Verify multiple files (str) are copied correctly
@@ -96,7 +90,7 @@ def test_no_files2(datafiles):
     assert not list(datafiles.iterdir())
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'dir1'))
+@pytest.mark.datafiles(os.path.join(str(FIXTURE_DIR), 'dir1'))
 def test_single_dir_str(datafiles):
     """
     Verify that a single directory (specified as a string) is copied correctly.
@@ -110,8 +104,8 @@ def test_single_dir_str(datafiles):
 
 
 @pytest.mark.datafiles(
-    os.path.join(FIXTURE_DIR, 'dir1'),
-    os.path.join(FIXTURE_DIR, 'dir2'),
+    os.path.join(str(FIXTURE_DIR), 'dir1'),
+    os.path.join(str(FIXTURE_DIR), 'dir2'),
     )
 def test_multi_dir_str(datafiles):
     """
@@ -131,10 +125,10 @@ def test_multi_dir_str(datafiles):
 
 
 @pytest.mark.datafiles(
-    Path(FIXTURE_DIR) / 'dir1',
-    Path(FIXTURE_FILES[0]),  # huckleberry.txt
-    Path(FIXTURE_DIR) / 'dir4',
-    Path(FIXTURE_FILES[1]),  # random.bin
+    FIXTURE_DIR / 'dir1',
+    FIXTURE_FILES[0],  # huckleberry.txt
+    FIXTURE_DIR / 'dir4',
+    FIXTURE_FILES[1],  # random.bin
     )
 def test_multiple(datafiles):
     """
@@ -155,8 +149,8 @@ def test_multiple(datafiles):
 
 
 @pytest.mark.datafiles(
-    Path(FIXTURE_DIR) / 'dir1',
-    Path(FIXTURE_DIR) / 'dir2',
+    FIXTURE_DIR / 'dir1',
+    FIXTURE_DIR / 'dir2',
     keep_top_dir=True,
     )
 def test_keep_top_dir(datafiles):
@@ -168,9 +162,9 @@ def test_keep_top_dir(datafiles):
 
 
 @pytest.mark.datafiles(
-    Path(FIXTURE_DIR) / 'dir1',
-    Path(FIXTURE_DIR) / 'dir2',
-    Path(FIXTURE_DIR) / 'dir3',
+    FIXTURE_DIR / 'dir1',
+    FIXTURE_DIR / 'dir2',
+    FIXTURE_DIR / 'dir3',
     on_duplicate='ignore',
     )
 def test_on_duplicate_ignore_dir_with_file(datafiles):
@@ -187,9 +181,9 @@ def test_on_duplicate_ignore_dir_with_file(datafiles):
 
 
 @pytest.mark.datafiles(
-    Path(FIXTURE_DIR) / 'dir1',
-    Path(FIXTURE_DIR) / 'dir2',
-    Path(FIXTURE_DIR) / 'dir3',
+    FIXTURE_DIR / 'dir1',
+    FIXTURE_DIR / 'dir2',
+    FIXTURE_DIR / 'dir3',
     on_duplicate='overwrite',
     )
 def test_on_duplicate_overwrite(datafiles):
@@ -218,11 +212,11 @@ def test_on_duplicate_exception(testdir):
         import pytest
         from pathlib import Path
 
-        FIXTURE_DIR = '{FIXTURE_DIR}'
+        FIXTURE_DIR = Path('{FIXTURE_DIR}')
 
         @pytest.mark.datafiles(
-            Path(FIXTURE_DIR) / 'dir1',
-            Path(FIXTURE_DIR) / 'dir3',
+            FIXTURE_DIR / 'dir1',
+            FIXTURE_DIR / 'dir3',
             )
         def test_ode(datafiles):
             assert len(list(datafiles.iterdir())) == 6
@@ -239,11 +233,11 @@ def test_on_duplicate_exception2(testdir):
         import pytest
         from pathlib import Path
 
-        FIXTURE_DIR = '{FIXTURE_DIR}'
+        FIXTURE_DIR = Path('{FIXTURE_DIR}')
 
         @pytest.mark.datafiles(
-            Path(FIXTURE_DIR) / 'dir1' / 'file1',
-            Path(FIXTURE_DIR) / 'dir3' / 'file1',
+            FIXTURE_DIR / 'dir1' / 'file1',
+            FIXTURE_DIR / 'dir3' / 'file1',
             )
         def test_ode(datafiles):
             assert len(list(datafiles.iterdir())) == 2
@@ -265,11 +259,11 @@ def test_on_duplicate_exception_dir(testdir):
         import pytest
         from pathlib import Path
 
-        FIXTURE_DIR = '{FIXTURE_DIR}'
+        FIXTURE_DIR = Path('{FIXTURE_DIR}')
 
         @pytest.mark.datafiles(
-            Path(FIXTURE_DIR) / 'dir4' / 'subdir1',
-            Path(FIXTURE_DIR) / 'dir5' / 'subdir1',
+            FIXTURE_DIR / 'dir4' / 'subdir1',
+            FIXTURE_DIR / 'dir5' / 'subdir1',
             keep_top_dir=True,
             )
         def test_duplicate_dir(datafiles):
@@ -280,8 +274,8 @@ def test_on_duplicate_exception_dir(testdir):
 
 
 @pytest.mark.datafiles(
-    Path(FIXTURE_DIR) / 'dir4' / 'subdir1',
-    Path(FIXTURE_DIR) / 'dir5' / 'subdir1',
+    FIXTURE_DIR / 'dir4' / 'subdir1',
+    FIXTURE_DIR / 'dir5' / 'subdir1',
     keep_top_dir=True,
     on_duplicate='ignore',
     )
@@ -293,8 +287,8 @@ def test_on_duplicate_ignore_dir(datafiles):
 
 
 @pytest.mark.datafiles(
-    Path(FIXTURE_DIR) / 'dir1' / 'file1',
-    Path(FIXTURE_DIR) / 'dir3' / 'file1',
+    FIXTURE_DIR / 'dir1' / 'file1',
+    FIXTURE_DIR / 'dir3' / 'file1',
     on_duplicate='ignore',
     )
 def test_on_duplicate_ignore_file(datafiles):
@@ -313,10 +307,10 @@ def test_non_existing_file(testdir):
         import pytest
         from pathlib import Path
 
-        FIXTURE_DIR = '{FIXTURE_DIR}'
+        FIXTURE_DIR = Path('{FIXTURE_DIR}')
 
         @pytest.mark.datafiles(
-            Path(FIXTURE_DIR) / 'fileZZ',
+            FIXTURE_DIR / 'fileZZ',
             )
         def test_ode(datafiles):
             assert len(list(datafiles.iterdir())) == 1
@@ -335,10 +329,10 @@ def test_invalid_keep_top_dir(testdir):
         import pytest
         from pathlib import Path
 
-        FIXTURE_DIR = '{FIXTURE_DIR}'
+        FIXTURE_DIR = Path('{FIXTURE_DIR}')
 
         @pytest.mark.datafiles(
-            Path(FIXTURE_DIR) / 'fileZZ',
+            FIXTURE_DIR / 'fileZZ',
             keep_top_dir='invalid-value',
             )
         def test_invalid_param(datafiles):
@@ -358,10 +352,10 @@ def test_invalid_on_duplicate(testdir):
         import pytest
         from pathlib import Path
 
-        FIXTURE_DIR = '{FIXTURE_DIR}'
+        FIXTURE_DIR = Path('{FIXTURE_DIR}')
 
         @pytest.mark.datafiles(
-            Path(FIXTURE_DIR) / 'fileZZ',
+            FIXTURE_DIR / 'fileZZ',
             on_duplicate='invalid-value',
             )
         def test_invalid_param(datafiles):
@@ -373,7 +367,7 @@ def test_invalid_on_duplicate(testdir):
         ])
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'sparrow_link.jpg'))
+@pytest.mark.datafiles(FIXTURE_DIR / 'sparrow_link.jpg')
 def test_copy_symlink(datafiles):
     """
     Verify that symlinks are copied and not their targets.
@@ -382,7 +376,7 @@ def test_copy_symlink(datafiles):
     assert (datafiles / 'sparrow_link.jpg').is_symlink()
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'dir6'))
+@pytest.mark.datafiles(FIXTURE_DIR / 'dir6')
 def test_copy_symlink_in_dir(datafiles):
     """
     Verify that symlinks are copied and not their targets.
@@ -392,7 +386,7 @@ def test_copy_symlink_in_dir(datafiles):
 
 
 @pytest.mark.datafiles(
-    os.path.join(FIXTURE_DIR, 'dir6'),
+    FIXTURE_DIR / 'dir6',
     keep_top_dir=True,
     )
 def test_copy_symlink_in_dir2(datafiles):
