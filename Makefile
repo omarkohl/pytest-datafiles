@@ -1,7 +1,7 @@
-.PHONY: clean-pyc clean-build docs clean
+.PHONY: all clean clean-build clean-pyc clean-test lint test test-quick test-example test-all coverage dist
 
 help:
-	@echo "clean        Lint, test, check coverage and package"
+	@echo "all          Lint, test, check coverage and package"
 	@echo "clean        Remove all build, test, coverage and Python artifacts"
 	@echo "clean-build  Remove build artifacts"
 	@echo "clean-pyc    Remove Python file artifacts"
