@@ -1,4 +1,11 @@
-"""Example: Reference files anywhere """
+"""Example: Reference files anywhere.
+
+One possible use case is when you are running tests on very big files that are
+not included or packaged with your tests. For example, your test files are
+large video files stored under */opt/big_files/* . You don't want your tests
+modifying the original files, but the files are required by the tests.
+
+"""
 import os
 import pytest
 

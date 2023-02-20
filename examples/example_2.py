@@ -1,4 +1,11 @@
-"""Example: make a subset of the files in a dir available."""
+"""Example: make a subset of the files in a dir available.
+
+Now for another use case: let's say in the directory where your tests are
+located, you place a directory named *test_files*. Here you have a lot of
+images you want to run tests on. By using this plugin, you make sure the
+original files under *test_files* are not modified by every test.
+
+"""
 from pathlib import Path
 
 import pytest

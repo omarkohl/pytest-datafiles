@@ -85,16 +85,14 @@ Upgrade to 3.0
 Version 3 now uses `tmp_path`_, resulting in `pathlib.Path` objects
 instead of `py.path`.
 
-Your tests may need to be adjusted.
-
-.. literalinclude:: tests/examples/example_upgradev3.py
-    :language: python
+Your tests may need to be adjusted. In `examples/example_upgradev3.py` you see some possible
+variations.
 
 
 Usage
 -----
 
-These examples can also be found in `tests/examples`.
+The full code with more details for the examples can be found in `examples/`.
 
 Example 1
 ~~~~~~~~~
@@ -105,8 +103,14 @@ large video files stored under */opt/big_files/* . You don't want your tests mod
 the original files, but the files are required by the tests. You can reference these
 data files in your test method as follows:
 
-.. literalinclude:: tests/examples/example_1.py
-    :language: python
+.. code-block:: python
+
+    # more details in `examples/example_1.py`
+
+    @pytest.mark.datafiles('/opt/big_files/film1.mp4')
+    def test_fast_forward(datafiles):
+        # ...
+
 
 Example 2
 ~~~~~~~~~
@@ -116,8 +120,18 @@ place a directory named *test_files*. Here you have a lot of images you want to 
 on. By using this plugin, you make sure the original files under *test_files* are not
 modified by every test.
 
-.. literalinclude:: tests/examples/example_2.py
-    :language: python
+.. code-block:: python
+
+    # more details in `examples/example_2.py`
+
+    @pytest.mark.datafiles(
+        FIXTURE_DIR / 'img1.jpg',
+        FIXTURE_DIR / 'img2.jpg',
+        FIXTURE_DIR / 'img3.jpg',
+    )
+    def test_find_borders(datafiles):
+        # ...
+
 
 Example 3
 ~~~~~~~~~
@@ -125,8 +139,20 @@ Example 3
 If all (or many) of your tests rely on the same files it can be easier to
 define one decorator beforehand and apply it to every test like this example:
 
-.. literalinclude:: tests/examples/example_3.py
-    :language: python
+.. code-block:: python
+
+    # more details in `examples/example_3.py`
+
+    ALL_IMGS = pytest.mark.datafiles(
+        FIXTURE_DIR / 'img1.jpg',
+        FIXTURE_DIR / 'img2.jpg',
+        FIXTURE_DIR / 'img3.jpg',
+    )
+
+    @ALL_IMGS
+    def test_something1(datafiles):
+        # ...
+
 
 Example 4
 ~~~~~~~~~
@@ -136,16 +162,23 @@ Imagine you have 3 directories (*dir1*, *dir2*, *dir3*) each containing the file
 
 This example clarifies the options **on_duplicate** and **keep_top_dir**.
 
-.. literalinclude:: tests/examples/example_4.py
-    :language: python
 
 Example 5
 ~~~~~~~~~
 
 You can also use a str paths.
 
-.. literalinclude:: tests/examples/example_5.py
-    :language: python
+.. code-block:: python
+
+    # more details in `examples/example_5.py`
+
+    @pytest.mark.datafiles(
+        os.path.join(FIXTURE_DIR, 'img1.jpg'),
+        os.path.join(FIXTURE_DIR, 'img2.jpg'),
+        os.path.join(FIXTURE_DIR, 'img3.jpg'),
+    )
+    def test_str(datafiles):
+        # ...
 
 
 Contributing

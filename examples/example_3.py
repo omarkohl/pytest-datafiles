@@ -1,4 +1,8 @@
-"""Example: re-use file selection."""
+"""Example: re-use file selection.
+
+If all (or many) of your tests rely on the same files it can be easier to
+define one decorator beforehand and apply it to every test.
+"""
 from pathlib import Path
 
 import pytest

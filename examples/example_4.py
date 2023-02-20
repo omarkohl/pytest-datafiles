@@ -1,4 +1,10 @@
-"""Example: files with same names."""
+"""Example: files with same names.
+
+Imagine you have 3 directories (*dir1*, *dir2*, *dir3*) each containing
+the files (*fileA* and *fileB*).
+
+This example clarifies the options **on_duplicate** and **keep_top_dir**.
+"""
 from pathlib import Path
 
 import pytest

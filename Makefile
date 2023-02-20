@@ -1,13 +1,16 @@
 .PHONY: clean-pyc clean-build docs clean
 
 help:
+	@echo "clean        Lint, test, check coverage and package"
 	@echo "clean        Remove all build, test, coverage and Python artifacts"
 	@echo "clean-build  Remove build artifacts"
 	@echo "clean-pyc    Remove Python file artifacts"
 	@echo "clean-test   Remove test and coverage artifacts"
 	@echo "lint         Check style with Flake8 and Pylint"
-	@echo "test         Run tests quickly with Python 3.11"
-	@echo "test-all     Run tests on every Python version with tox"
+	@echo "test         Run quick tests and those for the example code"
+	@echo "test-quick   Run tests quickly (main code only)with Python 3.11"
+	@echo "test-example Run tests for the example code"
+	@echo "test-all     Run tests on every Python version with tox and the example"
 	@echo "coverage     Check code coverage quickly with Python 3"
 	@echo "dist         Package"
 
@@ -31,7 +34,7 @@ clean-test:
 	rm -f .coverage
 	rm -fr htmlcov/
 
-all: lint test-all coverage dist readme
+all: lint test-all coverage dist
 
 lint:
 	tox -e lint

@@ -8,7 +8,7 @@ import pytest
 from _pytest.config import ExitCode
 from _pytest.pytester import Pytester
 
-EXAMPLE_DIR = Path(__file__).parent.resolve() / 'examples'
+EXAMPLE_DIR = Path(__file__).parent.parent.resolve() / 'examples'
 
 
 @pytest.fixture
