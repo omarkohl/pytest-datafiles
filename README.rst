@@ -3,23 +3,23 @@ pytest-datafiles
 ================
 
 .. image:: https://img.shields.io/travis/omarkohl/pytest-datafiles.svg
-        :target: https://travis-ci.org/omarkohl/pytest-datafiles
+    :target: https://travis-ci.org/omarkohl/pytest-datafiles
 
 
 .. image:: https://coveralls.io/repos/omarkohl/pytest-datafiles/badge.svg?branch=master&service=github
-  :target: https://coveralls.io/github/omarkohl/pytest-datafiles?branch=master
+    :target: https://coveralls.io/github/omarkohl/pytest-datafiles?branch=master
 
 
 .. image:: https://img.shields.io/pypi/v/pytest-datafiles.svg
-	:target: https://pypi.python.org/pypi/pytest-datafiles
+    :target: https://pypi.python.org/pypi/pytest-datafiles
 
 
 .. image:: https://codeclimate.com/github/omarkohl/pytest-datafiles/badges/gpa.svg
-   :target: https://codeclimate.com/github/omarkohl/pytest-datafiles
-   :alt: Code Climate
+    :target: https://codeclimate.com/github/omarkohl/pytest-datafiles
+    :alt: Code Climate
 
 
-`pytest`_ plugin to create a `tmpdir`_ containing a preconfigured set of
+`pytest`_ plugin to create a `tmp_path`_ containing a preconfigured set of
 files and/or directories.
 
 **Note about maintenance:** This project is maintained and bug reports or pull
@@ -30,19 +30,19 @@ Features
 --------
 
 This plugin allows you to specify one or several files/directories that are
-copied to a temporary directory (`tmpdir`_) before the execution of the test.
+copied to a temporary directory (`tmp_path`_) before the execution of the test.
 This means the original files are not modified and every test runs on its own
 version of the same files.
 
-Files/directories can be specified either as *strings* or as *py.path* objects.
+Files/directories can be specified either as *strings* or as *pathlib.Path* objects.
 
 To take advantage of the *datafiles* fixture in a test function, add
 *datafiles* as one of the test function parameters (per usual with `pytest`_
 fixtures) and decorate the test function with *@pytest.mark.datafiles(file1,
 file2, dir1, dir2, ...)*. See the examples below.
 
-The *datafiles* variable in your test function is a py.path object
-(`tmpdir`_) where the copied files are located. Under Linux systems this
+The *datafiles* variable in your test function is a pathlib.Path object
+(`tmp_path`_) where the copied files are located. Under Linux systems this
 will most likely be some subdirectory of */tmp/*.
 
 
@@ -79,8 +79,20 @@ Installation
     pip install pytest-datafiles
 
 
+Upgrade to 3.0
+--------------
+
+Version 3 now uses `tmp_path`_, resulting in `pathlib.Path` objects
+instead of `py.path`.
+
+Your tests may need to be adjusted. In `examples/example_upgradev3.py` you see some possible
+variations.
+
+
 Usage
 -----
+
+The full code with more details for the examples can be found in `examples/`.
 
 Example 1
 ~~~~~~~~~
@@ -93,19 +105,12 @@ data files in your test method as follows:
 
 .. code-block:: python
 
-    import os
-    import pytest
+    # more details in `examples/example_1.py`
 
     @pytest.mark.datafiles('/opt/big_files/film1.mp4')
     def test_fast_forward(datafiles):
-        path = str(datafiles)  # Convert from py.path object to path (str)
-        assert len(os.listdir(path)) == 1
-        assert os.path.isfile(os.path.join(path, 'film1.mp4'))
-        #assert some_operation(os.path.join(path, 'film1.mp4')) == expected_result
+        # ...
 
-        # Using py.path syntax
-        assert len(datafiles.listdir()) == 1
-        assert (datafiles / 'film1.mp4').check(file=1)
 
 Example 2
 ~~~~~~~~~
@@ -117,32 +122,16 @@ modified by every test.
 
 .. code-block:: python
 
-    import os
-    import pytest
-
-    FIXTURE_DIR = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)),
-        'test_files',
-        )
+    # more details in `examples/example_2.py`
 
     @pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'img1.jpg'),
-        os.path.join(FIXTURE_DIR, 'img2.jpg'),
-        os.path.join(FIXTURE_DIR, 'img3.jpg'),
-        )
+        FIXTURE_DIR / 'img1.jpg',
+        FIXTURE_DIR / 'img2.jpg',
+        FIXTURE_DIR / 'img3.jpg',
+    )
     def test_find_borders(datafiles):
-        for img in datafiles.listdir():
-            print(img)
-            #assert process(img) == some_expected_value
+        # ...
 
-    @pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'img4.jpg'),
-        os.path.join(FIXTURE_DIR, 'img5.jpg'),
-        )
-    def test_brightness(datafiles):
-        for img in datafiles.listdir():
-            print(img)
-            #assert process(img) == some_expected_value
 
 Example 3
 ~~~~~~~~~
@@ -152,36 +141,18 @@ define one decorator beforehand and apply it to every test like this example:
 
 .. code-block:: python
 
-    import os
-    import pytest
-
-    FIXTURE_DIR = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)),
-        'test_files',
-        )
+    # more details in `examples/example_3.py`
 
     ALL_IMGS = pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'img1.jpg'),
-        os.path.join(FIXTURE_DIR, 'img2.jpg'),
-        os.path.join(FIXTURE_DIR, 'img3.jpg'),
-        os.path.join(FIXTURE_DIR, 'img4.jpg'),
-        os.path.join(FIXTURE_DIR, 'img5.jpg'),
-        os.path.join(FIXTURE_DIR, 'img6.jpg'),
-        os.path.join(FIXTURE_DIR, 'img7.jpg'),
-        os.path.join(FIXTURE_DIR, 'img8.jpg'),
-        )
+        FIXTURE_DIR / 'img1.jpg',
+        FIXTURE_DIR / 'img2.jpg',
+        FIXTURE_DIR / 'img3.jpg',
+    )
 
     @ALL_IMGS
     def test_something1(datafiles):
-        for img in datafiles.listdir():
-            print(img)
-            #assert process(img) == some_expected_value
+        # ...
 
-    @ALL_IMGS
-    def test_something2(datafiles):
-        for img in datafiles.listdir():
-            print(img)
-            #assert process(img) == some_expected_value
 
 Example 4
 ~~~~~~~~~
@@ -191,79 +162,23 @@ Imagine you have 3 directories (*dir1*, *dir2*, *dir3*) each containing the file
 
 This example clarifies the options **on_duplicate** and **keep_top_dir**.
 
-.. code-block:: python
-
-    import os
-    import pytest
-
-    FIXTURE_DIR = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)),
-        '_fixture_files',
-        )
-
-    @pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'dir1'),
-        os.path.join(FIXTURE_DIR, 'dir2'),
-        os.path.join(FIXTURE_DIR, 'dir3'),
-        on_duplicate='ignore',
-        )
-    def test_dir_ignore(datafiles):
-        # datafiles.listdir() will list fileA and fileB originally from dir1
-        pass
-
-    @pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'dir1'),
-        os.path.join(FIXTURE_DIR, 'dir2'),
-        os.path.join(FIXTURE_DIR, 'dir3'),
-        on_duplicate='replace',
-        )
-    def test_dir_replace(datafiles):
-        # datafiles.listdir() will list fileA and fileB originally from dir3
-        pass
-
-    @pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'dir1'),
-        os.path.join(FIXTURE_DIR, 'dir2'),
-        os.path.join(FIXTURE_DIR, 'dir3'),
-        # on_duplicate='exception' is the default and does not need to be
-        # specified
-        )
-    def test_dir_exception(datafiles):
-        # An exception will be raised because of duplicate filename fileA
-        pass
-
-    @pytest.mark.datafiles(
-        os.path.join(FIXTURE_DIR, 'dir1'),
-        os.path.join(FIXTURE_DIR, 'dir2'),
-        os.path.join(FIXTURE_DIR, 'dir3'),
-        keep_top_dir=True,
-        )
-    def test_dir_keep_top_dir(datafiles):
-        # datafiles.listdir() will list dir1, dir2 and dir3 (each containing
-        # fileA and fileB)
-        pass
 
 Example 5
 ~~~~~~~~~
 
-You can also use a py.path object instead of str paths.
+You can also use a str paths.
 
 .. code-block:: python
 
-    import os
-    import py
-    import pytest
-
-    _dir = os.path.dirname(os.path.realpath(__file__))
-    FIXTURE_DIR = py.path.local(_dir) / 'test_files'
+    # more details in `examples/example_5.py`
 
     @pytest.mark.datafiles(
-        FIXTURE_DIR / 'img1.jpg',
-        FIXTURE_DIR / 'img2.jpg',
-        FIXTURE_DIR / 'img3.jpg',
-        )
-    def test_fast_forward(datafiles):
-        assert len(datafiles.listdir()) == 3
+        os.path.join(FIXTURE_DIR, 'img1.jpg'),
+        os.path.join(FIXTURE_DIR, 'img2.jpg'),
+        os.path.join(FIXTURE_DIR, 'img3.jpg'),
+    )
+    def test_str(datafiles):
+        # ...
 
 
 Contributing
@@ -288,7 +203,7 @@ To create and upload a new package first update the version number and then:
     # Create some test_example.py (e.g. with one of the examples above)
     test-venv/bin/pytest test_example.py
     # Set the git tag for final release
-    git tag -a 2.0
+    git tag -a 3.0
     git push --tags
     # Upload the package for final release
     twine upload dist/*
@@ -324,7 +239,7 @@ templates `cookiecutter-pypackage`_ and `cookiecutter-pytest-plugin`_.
 
 
 .. _`pytest`: https://docs.pytest.org/en/latest/contents.html
-.. _`tmpdir`: https://docs.pytest.org/en/latest/tmpdir.html
+.. _`tmp_path`: https://docs.pytest.org/en/latest/tmp_path.html
 .. _`tox`: https://tox.readthedocs.org/en/latest/
 .. _`MIT License`: http://opensource.org/licenses/MIT
 .. _`file an issue`: https://github.com/omarkohl/pytest-datafiles/issues

@@ -12,17 +12,15 @@ def _read(fname):
 
 
 DEPENDENCIES = [
-    'py',
     'pytest>=3.6',
     ]
 
-DESCRIPTION = ("py.test plugin to create a 'tmpdir' containing predefined "
-	       "files/directories.")
+DESCRIPTION = "py.test plugin to create a 'tmp_path' containing predefined files/directories."
 LONG_DESCRIPTION = _read('README.rst') + '\n\n' + _read('CHANGELOG.rst')
 
 setup(
     name='pytest-datafiles',
-    version='2.0.1',
+    version='3.0.0',
     py_modules=['pytest_datafiles'],
     url='https://github.com/omarkohl/pytest-datafiles',
     license='MIT',
@@ -36,21 +34,21 @@ setup(
     long_description_content_type='text/x-rst',
     entry_points={
         'pytest11': ['pytest_datafiles = pytest_datafiles'],
-	},
-    keywords='pytest datafiles tmpdir',
+    },
+    keywords='pytest datafiles tmp_path',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Framework :: Pytest',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Topic :: Software Development :: Testing',
         ]
     )

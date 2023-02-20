@@ -1,13 +1,16 @@
-.PHONY: clean-pyc clean-build docs clean
+.PHONY: all clean clean-build clean-pyc clean-test lint test test-quick test-example test-all coverage dist
 
 help:
+	@echo "all          Lint, test, check coverage and package"
 	@echo "clean        Remove all build, test, coverage and Python artifacts"
 	@echo "clean-build  Remove build artifacts"
 	@echo "clean-pyc    Remove Python file artifacts"
 	@echo "clean-test   Remove test and coverage artifacts"
 	@echo "lint         Check style with Flake8 and Pylint"
-	@echo "test         Run tests quickly with Python 3.5"
-	@echo "test-all     Run tests on every Python version with tox"
+	@echo "test         Run quick tests and those for the example code"
+	@echo "test-quick   Run tests quickly (main code only)with Python 3.11"
+	@echo "test-example Run tests for the example code"
+	@echo "test-all     Run tests on every Python version with tox and the example"
 	@echo "coverage     Check code coverage quickly with Python 3"
 	@echo "dist         Package"
 
@@ -31,18 +34,27 @@ clean-test:
 	rm -f .coverage
 	rm -fr htmlcov/
 
+all: lint test-all coverage dist
+
 lint:
 	tox -e lint
 
-test:
-	tox -e py35
+test: test-example | test-quick
 
-test-all:
+test-quick:
+	tox -e py311
+
+test-all: test-example | test-all-env
+
+test-all-env:
 	tox
+
+test-example:
+	tox -e examples
 
 coverage:
 	tox -e coverage
-	xdg-open htmlcov/index.html
+	command -v xdg-open && xdg-open htmlcov/index.html || true
 
 dist: clean
 	python3 setup.py sdist
