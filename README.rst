@@ -239,7 +239,7 @@ templates `cookiecutter-pypackage`_ and `cookiecutter-pytest-plugin`_.
 
 
 .. _`pytest`: https://docs.pytest.org/en/latest/contents.html
-.. _`tmp_path`: https://docs.pytest.org/en/latest/tmp_path.html
+.. _`tmp_path`: https://docs.pytest.org/en/latest/how-to/tmp_path.html
 .. _`tox`: https://tox.readthedocs.org/en/latest/
 .. _`MIT License`: http://opensource.org/licenses/MIT
 .. _`file an issue`: https://github.com/omarkohl/pytest-datafiles/issues
