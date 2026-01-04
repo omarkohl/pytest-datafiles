@@ -1,18 +1,16 @@
-.PHONY: all clean clean-build clean-pyc clean-test lint test test-quick test-example test-all coverage dist
+.PHONY: all clean clean-build clean-pyc clean-test lint test test-all coverage dist help
 
 help:
-	@echo "all          Lint, test, check coverage and package"
 	@echo "clean        Remove all build, test, coverage and Python artifacts"
 	@echo "clean-build  Remove build artifacts"
 	@echo "clean-pyc    Remove Python file artifacts"
 	@echo "clean-test   Remove test and coverage artifacts"
-	@echo "lint         Check style with Flake8 and Pylint"
-	@echo "test         Run quick tests and those for the example code"
-	@echo "test-quick   Run tests quickly (main code only)with Python 3.11"
-	@echo "test-example Run tests for the example code"
-	@echo "test-all     Run tests on every Python version with tox and the example"
-	@echo "coverage     Check code coverage quickly with Python 3"
-	@echo "dist         Package"
+	@echo "lint         Check formatting and run linter with ruff"
+	@echo "format       Format code with ruff"
+	@echo "test         Run tests with pytest"
+	@echo "test-all     Run tests across all Python versions (3.8-3.13)"
+	@echo "coverage     Check code coverage with pytest-cov"
+	@echo "dist         Build package with uv"
 
 clean: clean-build clean-pyc clean-test
 
@@ -33,30 +31,39 @@ clean-test:
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
+	rm -fr .pytest_cache/
+	rm -fr .ruff_cache/
 
-all: lint test-all coverage dist
+all: lint test coverage dist
+
+format:
+	uv run ruff format .
 
 lint:
-	tox -e lint
+	uv run ruff format --check .
+	uv run ruff check .
 
-test: test-example | test-quick
+test:
+	uv run pytest tests/ -v
 
-test-quick:
-	tox -e py311
-
-test-all: test-example | test-all-env
-
-test-all-env:
-	tox
-
-test-example:
-	tox -e examples
+test-all:
+	@echo "Testing with Python 3.8..."
+	uv run --python 3.8 pytest tests/ -v
+	@echo "Testing with Python 3.9..."
+	uv run --python 3.9 pytest tests/ -v
+	@echo "Testing with Python 3.10..."
+	uv run --python 3.10 pytest tests/ -v
+	@echo "Testing with Python 3.11..."
+	uv run --python 3.11 pytest tests/ -v
+	@echo "Testing with Python 3.12..."
+	uv run --python 3.12 pytest tests/ -v
+	@echo "Testing with Python 3.13..."
+	uv run --python 3.13 pytest tests/ -v
 
 coverage:
-	tox -e coverage
+	uv run pytest --cov=pytest_datafiles --cov-report=html --cov-report=term tests/
 	command -v xdg-open && xdg-open htmlcov/index.html || true
 
 dist: clean
-	python3 setup.py sdist
-	python3 setup.py bdist_wheel
+	uv build
 	ls -l dist
