@@ -62,7 +62,6 @@ test-all:
 
 coverage:
 	uv run pytest --cov=pytest_datafiles --cov-report=html --cov-report=term tests/
-	command -v xdg-open && xdg-open htmlcov/index.html || true
 
 dist: clean
 	uv build
