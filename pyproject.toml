@@ -35,6 +35,11 @@ dependencies = [
     "pytest>=3.6",
 ]
 
+[dependency-groups]
+dev = [
+    "ruff>=0.14.7",
+]
+
 [project.urls]
 Homepage = "https://github.com/omarkohl/pytest-datafiles"
 Repository = "https://github.com/omarkohl/pytest-datafiles"
@@ -45,3 +50,25 @@ pytest_datafiles = "pytest_datafiles"
 
 [tool.hatch.build.targets.wheel]
 packages = ["pytest_datafiles.py"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "PT",  # flake8-pytest-style
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["pytest_datafiles"]

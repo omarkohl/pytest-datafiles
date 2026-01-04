@@ -1,12 +1,12 @@
 """
 Module containing a 'datafiles' fixture for pytest Tests.
 """
+
 import shutil
 from pathlib import Path
 from typing import List
 
 import pytest
-
 from _pytest.config import Config
 
 
@@ -33,12 +33,12 @@ def _copy_all(entry_list: List[Path], target_dir: Path, on_duplicate: str):
     """
     for entry in entry_list:
         target_entry = target_dir / entry.name
-        if not target_entry.exists() or on_duplicate == 'overwrite':
+        if not target_entry.exists() or on_duplicate == "overwrite":
             if entry.is_file():
                 shutil.copy(entry, target_entry, follow_symlinks=False)
             else:
                 shutil.copytree(entry, target_entry, symlinks=True)
-        elif on_duplicate == 'exception':
+        elif on_duplicate == "exception":
             raise ValueError(f"'{target_entry}' already exists (src {entry})")
         else:  # ignore
             continue
@@ -73,21 +73,23 @@ def datafiles(request, tmp_path: Path) -> Path:
     """
     entry_list = []
     options = {
-        'keep_top_dir': False,
-        'on_duplicate': 'exception',  # ignore, overwrite
-        }
-    for mark in request.node.iter_markers('datafiles'):
+        "keep_top_dir": False,
+        "on_duplicate": "exception",  # ignore, overwrite
+    }
+    for mark in request.node.iter_markers("datafiles"):
         entry_list.extend(mark.args)
         options.update(mark.kwargs)
 
-    on_duplicate = options['on_duplicate']
-    keep_top_dir = options['keep_top_dir']
+    on_duplicate = options["on_duplicate"]
+    keep_top_dir = options["keep_top_dir"]
 
     if keep_top_dir not in (True, False):
         raise ValueError("'keep_top_dir' must be True or False")
-    if on_duplicate not in ('exception', 'ignore', 'overwrite'):
-        raise ValueError(f"'on_duplicate' must be 'exception', 'ignore' or "
-                         f"'overwrite', got '{on_duplicate}'")
+    if on_duplicate not in ("exception", "ignore", "overwrite"):
+        raise ValueError(
+            f"'on_duplicate' must be 'exception', 'ignore' or "
+            f"'overwrite', got '{on_duplicate}'"
+        )
 
     all_entries = _get_all_entries(entry_list, keep_top_dir)
     _copy_all(all_entries, tmp_path, on_duplicate)

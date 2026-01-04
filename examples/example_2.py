@@ -6,18 +6,19 @@ images you want to run tests on. By using this plugin, you make sure the
 original files under *test_files* are not modified by every test.
 
 """
+
 from pathlib import Path
 
 import pytest
 
 # Dir containing 8 files
-FIXTURE_DIR = Path(__file__).parent.resolve() / 'test_files'
+FIXTURE_DIR = Path(__file__).parent.resolve() / "test_files"
 
 
 @pytest.mark.datafiles(
-    FIXTURE_DIR / 'img1.jpg',
-    FIXTURE_DIR / 'img2.jpg',
-    FIXTURE_DIR / 'img3.jpg',
+    FIXTURE_DIR / "img1.jpg",
+    FIXTURE_DIR / "img2.jpg",
+    FIXTURE_DIR / "img3.jpg",
 )
 def test_find_borders(datafiles):
     """Work with a copy of only 3 files."""
@@ -26,14 +27,14 @@ def test_find_borders(datafiles):
         # assert process(img) == some_expected_value
 
         # and only the referenced files are available
-        assert img.name != 'img4.jpg'
+        assert img.name != "img4.jpg"
 
     assert len(list(datafiles.iterdir())) == 3
 
 
 @pytest.mark.datafiles(
-    FIXTURE_DIR / 'img4.jpg',
-    FIXTURE_DIR / 'img5.jpg',
+    FIXTURE_DIR / "img4.jpg",
+    FIXTURE_DIR / "img5.jpg",
 )
 def test_brightness(datafiles):
     """Work with a copy of only 2 files."""
@@ -42,7 +43,7 @@ def test_brightness(datafiles):
         # assert process(img) == some_expected_value
 
         # and only the referenced files are available
-        assert img.name != 'img3.jpg'
+        assert img.name != "img3.jpg"
 
     assert len(list(datafiles.iterdir())) == 2
 

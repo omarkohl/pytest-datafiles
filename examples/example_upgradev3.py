@@ -1,19 +1,20 @@
 """Upgrade to v3."""
+
 import os
 from pathlib import Path
 
-import pytest
 import py
+import pytest
 
 FIXTURE_DIR = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
-    'test_files',
+    "test_files",
 )
 
-FIXTURE_DIR_NEW_STYLE = Path(__file__).parent.resolve() / 'test_files'
+FIXTURE_DIR_NEW_STYLE = Path(__file__).parent.resolve() / "test_files"
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'img1.jpg'))
+@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, "img1.jpg"))
 def test_convert_to_pypath(datafiles):
     """
     If your tests are taking advantage of py.path the simplest change
@@ -29,10 +30,10 @@ def test_convert_to_pypath(datafiles):
 
     # code remains as before
     assert len(datafiles.listdir()) == 1
-    assert (datafiles / 'img1.jpg').check(file=1)
+    assert (datafiles / "img1.jpg").check(file=1)
 
 
-@pytest.mark.datafiles(FIXTURE_DIR_NEW_STYLE / 'img1.jpg')
+@pytest.mark.datafiles(FIXTURE_DIR_NEW_STYLE / "img1.jpg")
 def test_update_to_pathlib(datafiles):
     """Upgrade code to use `pathlib`.
 
@@ -44,14 +45,14 @@ def test_update_to_pathlib(datafiles):
 
     # old style
     assert len(pypath_datafiles.listdir()) == 1
-    assert (pypath_datafiles / 'img1.jpg').check(file=1)
+    assert (pypath_datafiles / "img1.jpg").check(file=1)
 
     # new style  # pylint: disable=R0801
     assert len(list(datafiles.iterdir())) == 1
-    assert (datafiles / 'img1.jpg').is_file()
+    assert (datafiles / "img1.jpg").is_file()
 
 
-@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, 'img1.jpg'))
+@pytest.mark.datafiles(os.path.join(FIXTURE_DIR, "img1.jpg"))
 def test_keep_using_str(datafiles):
     """Keep using plain `os`.
 
@@ -60,4 +61,4 @@ def test_keep_using_str(datafiles):
 
     path = str(datafiles)
     assert len(os.listdir(path)) == 1
-    assert os.path.isfile(os.path.join(path, 'img1.jpg'))
+    assert os.path.isfile(os.path.join(path, "img1.jpg"))

@@ -3,21 +3,22 @@
 If all (or many) of your tests rely on the same files it can be easier to
 define one decorator beforehand and apply it to every test.
 """
+
 from pathlib import Path
 
 import pytest
 
-FIXTURE_DIR = Path(__file__).parent.resolve() / 'test_files'
+FIXTURE_DIR = Path(__file__).parent.resolve() / "test_files"
 
 ALL_IMGS = pytest.mark.datafiles(
-    FIXTURE_DIR / 'img1.jpg',
-    FIXTURE_DIR / 'img2.jpg',
-    FIXTURE_DIR / 'img3.jpg',
-    FIXTURE_DIR / 'img4.jpg',
-    FIXTURE_DIR / 'img5.jpg',
-    FIXTURE_DIR / 'img6.jpg',
-    FIXTURE_DIR / 'img7.jpg',
-    FIXTURE_DIR / 'img8.jpg',
+    FIXTURE_DIR / "img1.jpg",
+    FIXTURE_DIR / "img2.jpg",
+    FIXTURE_DIR / "img3.jpg",
+    FIXTURE_DIR / "img4.jpg",
+    FIXTURE_DIR / "img5.jpg",
+    FIXTURE_DIR / "img6.jpg",
+    FIXTURE_DIR / "img7.jpg",
+    FIXTURE_DIR / "img8.jpg",
 )
 
 
@@ -31,7 +32,7 @@ def test_something1(datafiles):
     assert len(list(datafiles.iterdir())) == 8
 
     # we can do something destructive
-    (datafiles / 'img3.jpg').unlink()
+    (datafiles / "img3.jpg").unlink()
     assert len(list(datafiles.iterdir())) == 7
 
 
@@ -45,5 +46,5 @@ def test_something2(datafiles):
     assert len(list(datafiles.iterdir())) == 8
 
     # we can do something destructive
-    (datafiles / 'img1.jpg').unlink()
+    (datafiles / "img1.jpg").unlink()
     assert len(list(datafiles.iterdir())) == 7

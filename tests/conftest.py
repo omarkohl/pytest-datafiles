@@ -1,3 +1,3 @@
 # pylint: skip-file
 
-pytest_plugins = ['pytester']
+pytest_plugins = ["pytester"]
