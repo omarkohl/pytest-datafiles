@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/). The change log is formatted as suggested by [Keep a CHANGELOG](http://keepachangelog.com/).
 
-## [Unreleased](https://github.com/omarkohl/pytest-datafiles/compare/3.0...master)
+## [Unreleased](https://github.com/omarkohl/pytest-datafiles/compare/3.0.1...master)
 
 Added
 Changed
@@ -12,7 +12,26 @@ Removed
 Fixed
 Security
 
-## [3.0](https://github.com/omarkohl/pytest-datafiles/compare/2.0.1...3.0)
+## [3.0.1](https://github.com/omarkohl/pytest-datafiles/compare/3.0.0...3.0.1)
+
+Fixed
+
+* Corrected minimum pytest version requirement from >=3.6 to >=6.2.0 to match actual requirements (tmp_path fixture)
+* Closed issue [#11](https://github.com/omarkohl/pytest-datafiles/issues/11) - file mode bits are now preserved (resolved by pathlib migration in 3.0)
+
+Added
+
+* Regression test to ensure file permissions are preserved when copying files
+
+Changed
+
+* Migrated to uv for package management and builds
+* Added ruff for code formatting and linting
+* Converted documentation from RST to Markdown
+* Added Dependabot for automated dependency updates
+* Updated GitHub Actions workflows for CI/CD
+
+## [3.0.0](https://github.com/omarkohl/pytest-datafiles/compare/2.0.1...3.0.0)
 
 Changed
 

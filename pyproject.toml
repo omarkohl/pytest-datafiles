@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pytest-datafiles"
-version = "3.0.0"
+version = "3.0.1"
 description = "py.test plugin to create a 'tmp_path' containing predefined files/directories."
 readme = "README.md"
 license = "MIT"
