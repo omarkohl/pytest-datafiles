@@ -117,28 +117,45 @@ def test_str(datafiles):
 
 Contributions are very welcome. Tests can be run with `make test`. Please ensure the coverage stays at least the same before you submit a pull request.
 
-To create and upload a new package first update the version number and then:
+## Releasing
+
+To create and upload a new package, update the version number in `pyproject.toml` and `CHANGELOG.md`, then:
 
 ```bash
-pip3 install --user -U twine
+# Run tests and linting
+make test
+make lint
+
+# Build the distribution
 make clean
 make dist
-twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+# Optional: Test on TestPyPI first
+uv publish --publish-url https://test.pypi.org/legacy/
+
 # Verify the package is usable
-uv venv test-venv
+uv venv test-venv --python 3.11
 source test-venv/bin/activate
-pip install pytest
-pip install --index-url https://test.pypi.org/simple/ pytest-datafiles
-# Create some test_example.py (e.g. with one of the examples above)
-pytest test_example.py
-# Set the git tag for final release
-git tag -a 3.0
+uv pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ pytest-datafiles
+pytest examples/example_2.py
+deactivate
+
+# Create git tag (using jj)
+jj tag set 3.0.1 -r @-
+jj git push
 git push --tags
-# Upload the package for final release
-twine upload dist/*
+
+# Upload to PyPI
+uv publish
+
+# Create GitHub release
+gh release create 3.0.1 \
+  --title "pytest-datafiles 3.0.1" \
+  --notes-from-tag \
+  dist/*
 ```
 
-Finally create a release on GitHub and add the packages from dist/* to it.
+**Authentication:** Set the `UV_PUBLISH_TOKEN` environment variable with your PyPI API token, or `uv publish` will prompt for credentials.
 
 Of course this will only work if you have the necessary PyPI credentials for this package.
 
