@@ -72,3 +72,7 @@ ignore = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["pytest_datafiles"]
+
+[tool.coverage.run]
+branch = true
+source = ["pytest_datafiles"]
