@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "pytest-datafiles"
 version = "3.0.0"
 description = "py.test plugin to create a 'tmp_path' containing predefined files/directories."
-readme = "README.rst"
+readme = "README.md"
 license = "MIT"
 authors = [
     { name = "Omar Kohl", email = "omarkohl@gmail.com" },
