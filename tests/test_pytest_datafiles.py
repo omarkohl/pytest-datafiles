@@ -402,3 +402,24 @@ def test_copy_symlink_in_dir2(datafiles):
     assert len(list(datafiles.iterdir())) == 1
     assert len(list((datafiles / "dir6").iterdir())) == 1
     assert (datafiles / "dir6" / "sparrow_link.jpg").is_symlink()
+
+
+@pytest.mark.datafiles(FIXTURE_DIR / "executable.sh")
+def test_file_mode_bits_preserved(datafiles):
+    """
+    Verify that file permission bits are preserved when copying files.
+
+    Regression test for issue #11.
+    """
+    original_file = FIXTURE_DIR / "executable.sh"
+    copied_file = datafiles / "executable.sh"
+
+    # Get the mode of both files
+    original_mode = original_file.stat().st_mode
+    copied_mode = copied_file.stat().st_mode
+
+    # The mode bits should match
+    assert original_mode == copied_mode, (
+        f"File permissions not preserved: "
+        f"original={oct(original_mode)}, copied={oct(copied_mode)}"
+    )
