@@ -32,7 +32,7 @@ classifiers = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    "pytest>=3.6",
+    "pytest>=6.2.0",
 ]
 
 [dependency-groups]
