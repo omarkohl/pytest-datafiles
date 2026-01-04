@@ -150,7 +150,7 @@ uv publish
 
 # Create GitHub release
 gh release create 3.0.1 \
-  --title "pytest-datafiles 3.0.1" \
+  --title "3.0.1" \
   --notes-from-tag \
   dist/*
 ```
