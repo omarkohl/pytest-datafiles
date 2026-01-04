@@ -38,6 +38,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ruff>=0.14.7",
+    "pytest-cov>=5.0.0",
 ]
 
 [project.urls]
