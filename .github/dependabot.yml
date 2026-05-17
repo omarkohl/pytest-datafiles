@@ -6,6 +6,8 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
+    assignees:
+      - "omarkohl"
     groups:
       dependencies:
         patterns:
@@ -17,3 +19,5 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
+    assignees:
+      - "omarkohl"
